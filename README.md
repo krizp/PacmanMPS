@@ -6,7 +6,7 @@ Membrii echipei:
   - Cetin Rasid, 341C4 - Dev
   - Alex Filiuta, 341C4 - Dev
   - Paul German, 343C4 - Tester
-  - Daniela Tatu, 341C4 - Testerhttps://msdn.microsoft.com/en-us/library/ff926074.aspx
+  - Daniela Tatu, 341C4 - Tester
 
 Descrierea proiectului: http://ocw.cs.pub.ro/courses/mps/proiect/proiect-1
 
