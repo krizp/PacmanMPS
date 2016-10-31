@@ -1,12 +1,12 @@
 Membrii echipei:
-1. Ailin Menabil, 341C5 - PM
-2. Tiberiu Iorgulescu, 341C4 - TL
-3. Andrei Ene, 343C4 - Dev
-4. Mihai Mihailescu, 342C5 - Dev
-5. Cetin Rasid, 341C4 - Dev
-6. Alex Filiuta, 341C4 - Dev
-7. Paul German, 343C4 - Tester
-8. Daniela Tatu, 341C4 - Testerhttps://msdn.microsoft.com/en-us/library/ff926074.aspx
+  - Ailin Menabil, 341C5 - PM
+  - Tiberiu Iorgulescu, 341C4 - TL
+  - Andrei Ene, 343C4 - Dev
+  - Mihai Mihailescu, 342C5 - Dev
+  - Cetin Rasid, 341C4 - Dev
+  - Alex Filiuta, 341C4 - Dev
+  - Paul German, 343C4 - Tester
+  - Daniela Tatu, 341C4 - Testerhttps://msdn.microsoft.com/en-us/library/ff926074.aspx
 
 Descrierea proiectului: http://ocw.cs.pub.ro/courses/mps/proiect/proiect-1
 
