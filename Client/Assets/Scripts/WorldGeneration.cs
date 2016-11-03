@@ -79,6 +79,7 @@ public class WorldGeneration : MonoBehaviour {
                 GameObject newObj = new GameObject(crtSprite.name + "(" + i + "," + j + ")");
                 SpriteRenderer renderer = newObj.AddComponent<SpriteRenderer>();
                 renderer.sprite = crtSprite;
+				renderer.sortingLayerName = "World";
                 newObj.transform.position = new Vector3(j * tileSize, i * tileSize, 0);
             }
         }
