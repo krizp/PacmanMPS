@@ -14,6 +14,8 @@ public class WorldGeneration : MonoBehaviour {
 
     public Camera mainCamera;
 
+    public PlayerController player;
+
     private int[][] labyrinth;
 
 
@@ -21,7 +23,7 @@ public class WorldGeneration : MonoBehaviour {
     void Start () {
 
         tileSize = ground.textureRect.width / ground.pixelsPerUnit;
-
+        player.placeOnTile(2, 5);
 
         labyrinth = new int[nl][];
         for ( var i = 0; i < nl; i++ )
@@ -83,6 +85,16 @@ public class WorldGeneration : MonoBehaviour {
                 newObj.transform.position = new Vector3(j * tileSize, i * tileSize, 0);
             }
         }
+    }
+
+    public float getTileSize()
+    {
+        return tileSize;
+    }
+
+    public int[][] getLabyrinth()
+    {
+        return labyrinth;
     }
 	
 	// Update is called once per frame

@@ -82,8 +82,8 @@
 -define:UNITY_EDITOR_64
 -define:UNITY_EDITOR_WIN
 -define:UNITY_TEAM_LICENSE
-Assets/ChangeLevel.cs
-Assets/PlayerController.cs
+Assets/Scripts/ChangeLevel.cs
+Assets/Scripts/PlayerController.cs
 Assets/Scripts/WorldGeneration.cs
 -r:D:\Unity\Editor\Data\Mono\lib\mono\unity\System.Runtime.Serialization.dll
 -r:D:\Unity\Editor\Data\Mono\lib\mono\unity\System.Xml.Linq.dll
