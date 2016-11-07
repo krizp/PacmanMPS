@@ -22,6 +22,8 @@ namespace TCPServer
 			// Deny any atempt to connect at the server
 			_acceptClients = false;
 
+			SendToAllClients("Start");
+
 			mg = new MazeGenerator();
 			int[,] maze = mg.computeFinalMap();
 
