@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PersistentSharpConnector : MonoBehaviour
 {
-	SharpConnector conn;
+	SharpClient conn;
 
 	void Awake()
 	{
@@ -14,7 +14,7 @@ public class PersistentSharpConnector : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		conn = new SharpConnector();
+		conn = new SharpClient();
 	}
 	
 	// Update is called once per frame

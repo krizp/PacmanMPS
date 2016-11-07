@@ -217,8 +217,10 @@ public class PlayerController : MonoBehaviour {
     public void placeOnTile(int x, int y)
     {
         float tileSize = gen.getTileSize();
-        player.pos = new Vector2(x, y);
-        transform.position = new Vector3(x * tileSize, y * tileSize, 0);
+		int nl = gen.getLabyrinth().Length;
+
+        player.pos = new Vector2(x, nl - y - 1);
+        transform.position = new Vector3(x * tileSize, (nl - y - 1) * tileSize, 0);
     }
 
 }
