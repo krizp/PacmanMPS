@@ -63,6 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\ReceiveCommands.cs" />
     <Compile Include="Assets\Scripts\ChangeLevel.cs" />
     <Compile Include="Assets\Scripts\PersistentSharpConnector.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />

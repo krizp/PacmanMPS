@@ -26,9 +26,9 @@ public class ChangeLevel : MonoBehaviour
     {
 		if (conn.ConnectToServer(serverIpAddress.text, 2737))
 		{
+            Debug.Log("Connect to server succeeded!");
             canvasMain.SetActive(false);
             canvasWaiting.SetActive(true);
-			UnityEngine.SceneManagement.SceneManager.LoadScene("GameScene");
 		}
 		else
 		{
