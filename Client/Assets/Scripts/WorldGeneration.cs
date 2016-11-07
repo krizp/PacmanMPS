@@ -1,29 +1,40 @@
 using UnityEngine;
 using System.Collections;
 
-public class WorldGeneration : MonoBehaviour {
-    
-
-    public int nl = 5;
-    public int nc = 5;
-
+public class WorldGeneration : MonoBehaviour
+{
     public Sprite ground;
     public Sprite wall;
+    float tileSize;
 
-    private float tileSize;
-
-    public Camera mainCamera;
-
+	public Camera mainCamera;
     public PlayerController player;
 
-    private int[][] labyrinth;
+	public PersistentSharpConnector conn;
 
+    int nl, nc;
+    int[][] labyrinth;
 
     // Use this for initialization
-    void Start () {
+    void Start ()
+	{
+		GameObject persistentSharpConnectorObj = GameObject.FindGameObjectWithTag("PersistentObject") as GameObject;
+		conn = persistentSharpConnectorObj.GetComponent<PersistentSharpConnector>();
+
+		if (conn != null)
+		{
+			conn.SendToServer("Hello!");
+		}
+		else
+		{
+			Debug.Log("null reference PersistentSharpConnector");
+		}
 
         tileSize = ground.textureRect.width / ground.pixelsPerUnit;
         player.placeOnTile(2, 5);
+
+		nl = 25;
+		nc = 25;
 
         labyrinth = new int[nl][];
         for ( var i = 0; i < nl; i++ )
