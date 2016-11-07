@@ -110,7 +110,7 @@ namespace TCPServer
         private void btnSendToAllClients_Click(object sender, EventArgs e)
         {
 			//Server.Instance.SendToAllClients();
-			_server.SendToAllClients();
+			_server.SendToAllClients("rrrrr");
 		}
 
 		private void btnPrintClients_Click(object sender, EventArgs e)

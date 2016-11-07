@@ -119,15 +119,13 @@ namespace TCPServer
 			return result;
 		}
 
-        public void SendToAllClients()
+        public void SendToAllClients(string payload)
         {
 			lock (_connectedClients)
 			{
-				string msg = "rrrrrr";
+				Console.WriteLine("Send to " + _connectedClients.Count + " clients: " + payload);
 
-				Console.WriteLine("Send to " + _connectedClients.Count + " clients: " + msg);
-
-				_connectedClients.ForEach(cn => cn.Send(msg));
+				_connectedClients.ForEach(cn => cn.Send(payload));
 			}
         }
     }
