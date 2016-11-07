@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="ClientNode.cs" />
     <Compile Include="GameServer.cs" />
+    <Compile Include="MazeGenerator.cs" />
     <Compile Include="TCPServerForm.cs">
       <SubType>Form</SubType>
     </Compile>

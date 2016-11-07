@@ -9,9 +9,12 @@ public class ChangeLevel : MonoBehaviour
 
 	public PersistentSharpConnector conn;
 
+    public GameObject canvasMain;
+    public GameObject canvasWaiting;
+
 	// Use this for initialization
 	void Start () {
-	
+        canvasWaiting.SetActive(false);
 	}
 	
 	// Update is called once per frame
@@ -23,6 +26,8 @@ public class ChangeLevel : MonoBehaviour
     {
 		if (conn.ConnectToServer(serverIpAddress.text, 2737))
 		{
+            canvasMain.SetActive(false);
+            canvasWaiting.SetActive(true);
 			UnityEngine.SceneManagement.SceneManager.LoadScene("GameScene");
 		}
 		else

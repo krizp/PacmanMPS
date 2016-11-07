@@ -25,7 +25,7 @@ namespace TCPServer
 			mg = new MazeGenerator();
 			int[,] maze = mg.computeFinalMap();
 
-			SendToAllClients(CreateMazePayload());
+			//SendToAllClients(CreateMazePayload());
 		}
 
 		public override void ProcessPayload(ClientNode c, string payload)
