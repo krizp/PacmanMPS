@@ -36,7 +36,7 @@ namespace TCPServer
 			this.label2 = new System.Windows.Forms.Label();
 			this.btnSendToAllClients = new System.Windows.Forms.Button();
 			this.btnPrintClients = new System.Windows.Forms.Button();
-			this.button1 = new System.Windows.Forms.Button();
+			this.btnStartGame = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -113,21 +113,22 @@ namespace TCPServer
 			this.btnPrintClients.UseVisualStyleBackColor = true;
 			this.btnPrintClients.Click += new System.EventHandler(this.btnPrintClients_Click);
 			// 
-			// button1
+			// btnStartGame
 			// 
-			this.button1.Location = new System.Drawing.Point(41, 112);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(206, 73);
-			this.button1.TabIndex = 13;
-			this.button1.Text = "Start Game";
-			this.button1.UseVisualStyleBackColor = true;
+			this.btnStartGame.Location = new System.Drawing.Point(41, 112);
+			this.btnStartGame.Name = "btnStartGame";
+			this.btnStartGame.Size = new System.Drawing.Size(206, 73);
+			this.btnStartGame.TabIndex = 13;
+			this.btnStartGame.Text = "Start Game";
+			this.btnStartGame.UseVisualStyleBackColor = true;
+			this.btnStartGame.Click += new System.EventHandler(this.btnStartGame_Click);
 			// 
 			// TCPServerForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(285, 359);
-			this.Controls.Add(this.button1);
+			this.Controls.Add(this.btnStartGame);
 			this.Controls.Add(this.btnPrintClients);
 			this.Controls.Add(this.btnSendToAllClients);
 			this.Controls.Add(this.label2);
@@ -154,7 +155,7 @@ namespace TCPServer
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnSendToAllClients;
 		private System.Windows.Forms.Button btnPrintClients;
-		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.Button btnStartGame;
 	}
 }
 

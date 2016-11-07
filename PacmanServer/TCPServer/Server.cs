@@ -12,11 +12,13 @@ namespace TCPServer
 	{
 		protected TcpListener			_tcpListener;
 		protected List<ClientNode>	_connectedClients;
+		protected bool _acceptClients { get; set; }
 
 		public Server() 
 		{
 			_tcpListener = null;
 			_connectedClients = new List<ClientNode>();
+			_acceptClients = true;
 		}
 
 		public void Start(IPAddress ip, int port)
@@ -55,7 +57,7 @@ namespace TCPServer
 
 		private void OnCompleteAcceptTcpClient(IAsyncResult iar)
 		{
-			if (!IsRunning())
+			if (!IsRunning() || !_acceptClients)
 				return;
 
 			TcpListener tcpl = (TcpListener)iar.AsyncState;

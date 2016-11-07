@@ -12,6 +12,12 @@ namespace TCPServer
 		{
 		}
 
+		public void StartGame()
+		{
+			Console.WriteLine("Game Started!");
+			_acceptClients = false;
+		}
+
 		public override void ProcessPayload(ClientNode c, string payload)
 		{
 			Console.WriteLine(c.ToString() + " " + payload);

@@ -121,5 +121,10 @@ namespace TCPServer
 				res.ForEach(s => Console.WriteLine(s));
 			}
 		}
+
+		private void btnStartGame_Click(object sender, EventArgs e)
+		{
+			_server.StartGame();
+		}
 	}
 }
