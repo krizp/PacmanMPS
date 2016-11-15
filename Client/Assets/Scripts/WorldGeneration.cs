@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class WorldGeneration : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class WorldGeneration : MonoBehaviour
 
 	public PersistentSharpConnector conn;
 	public PersistentInitGameData initData;
+    public ReceiveCommands commands;
 	
     int[][] labyrinth;
 
@@ -24,7 +26,12 @@ public class WorldGeneration : MonoBehaviour
 		GameObject persistentSharpConnectorObj = GameObject.FindGameObjectWithTag("PersistentSharpConnector") as GameObject;
 		conn = persistentSharpConnectorObj.GetComponent<PersistentSharpConnector>();
 
-		if (conn != null && initData != null)
+        GameObject objCommands = GameObject.FindGameObjectWithTag("PersistentReceiveCommands") as GameObject;
+        commands = objCommands.GetComponent<ReceiveCommands>();
+
+        Debug.Log("receive commands script: " + commands);
+
+        if (conn != null && initData != null)
 		{
 			labyrinth = initData.GetLabyrinth();
 		}
@@ -35,10 +42,19 @@ public class WorldGeneration : MonoBehaviour
 		}
 
         tileSize = ground.textureRect.width / ground.pixelsPerUnit;
-        player.placeOnTile(1, 1);
+        //player.placeOnTile(1, 1);
 
 
 		DrawWorld();
+
+        player = commands.playerController;
+        player.setWorldGeneration(this);
+        List<PlayerController.Player> players = player.players;
+        foreach (PlayerController.Player p in players)
+        {
+            p.createGameObject();
+            player.placeOnTile(p, p.pos);
+        }
 
         Vector3 cameraPos = mainCamera.transform.position;
         cameraPos.x = (labyrinth[0].Length) * tileSize / 2;
@@ -84,7 +100,7 @@ public class WorldGeneration : MonoBehaviour
     {
         Sprite crtSprite;
 
-        for ( var i = labyrinth.Length - 1; i >= 0; i-- )
+        for ( var i = 0; i < labyrinth.Length; i++ )
         {
             for ( var j = 0; j < labyrinth[i].Length; j++ )
             {
@@ -118,6 +134,5 @@ public class WorldGeneration : MonoBehaviour
 	
 	// Update is called once per frame
 	void Update () {
-	
 	}
 }

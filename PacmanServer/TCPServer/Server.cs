@@ -63,6 +63,8 @@ namespace TCPServer
 			TcpListener tcpl = (TcpListener)iar.AsyncState;
 			TcpClient tclient = null;
 			ClientNode cNode = null;
+            /* numarul conexiunii clientului actual */
+            int index = 0;
 
 			try
 			{
@@ -78,9 +80,10 @@ namespace TCPServer
 				
 				lock (_connectedClients)
 				{
+                    index = _connectedClients.Count;
 					_connectedClients.Add(cNode);
 				}
-
+                cNode.Send("M1" + index);
 				cNode.BeginRead();
 			}
 			catch (Exception exc)
@@ -123,7 +126,7 @@ namespace TCPServer
         {
 			lock (_connectedClients)
 			{
-				Console.WriteLine("Send to " + _connectedClients.Count + " clients: " + payload);
+				//Console.WriteLine("Send to " + _connectedClients.Count + " clients: " + payload);
 
 				_connectedClients.ForEach(cn => cn.Send(payload));
 			}

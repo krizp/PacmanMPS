@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Net;
 using System;
@@ -14,11 +15,13 @@ public class SharpClient
 	byte[] mRx;
 	const int READ_BUFFER_SIZE = 2048;
 	bool error;
-	string response;
+    /* Salvam toate mesajele care vin asincron
+    Mesajele sunt verificate la fiecare Update() */
+	List<string> response;
 
 	public SharpClient()
 	{
-		response = String.Empty;
+        response = new List<string>();
 		error = false;
 	}
 
@@ -94,8 +97,16 @@ public class SharpClient
 			}
 			strReceived = Encoding.ASCII.GetString(mRx, 0, nCountBytesReceivedFromServer);
 
-			response = strReceived;
+  
+            lock(response)
+            {
+                response.Add(strReceived);
+            }
+
 			Console.WriteLine(strReceived);
+            
+
+
 
 			mRx = new byte[READ_BUFFER_SIZE];
 			tcpc.GetStream().BeginRead(mRx, 0, mRx.Length, onCompleteReadFromServerStream, tcpc);
@@ -154,10 +165,15 @@ public class SharpClient
 		}
 	}
 
-	public string Rececive()
+	public List<string> Rececive()
 	{
-		string r = response;
-		response = string.Empty;
+        List<string> r;
+        lock (response)
+        {
+            r = response;
+            response = new List<string>();
+        }
+		
 
 		return r;
 	}

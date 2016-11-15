@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 public class MazeGenerator
 {
     int[,] map;
-    int[,] finalMap;
+    public int[,] finalMap;
     int dimension;
     int sRow = 0, sCol = 0;
     Random random = new Random();

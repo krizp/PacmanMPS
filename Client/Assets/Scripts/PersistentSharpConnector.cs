@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PersistentSharpConnector : MonoBehaviour
 {
@@ -34,7 +35,7 @@ public class PersistentSharpConnector : MonoBehaviour
 		conn.Send(payload);
 	}
 
-	public string ReceveFromServer()
+	public List<string> ReceveFromServer()
 	{
 		return conn.Rececive();
 	}
