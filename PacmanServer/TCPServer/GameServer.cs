@@ -194,7 +194,7 @@ namespace TCPServer
                 
                 simulate((float)dT);
 
-                Thread.Sleep(Math.Max((int)(1000.0f / 60.0f - dT), 0));
+                Thread.Sleep(Math.Max((int)(1000.0f / 60.0f - dT * 1000.0f), 0));
             }
         }
         public override void ProcessPayload(ClientNode c, string payload)
