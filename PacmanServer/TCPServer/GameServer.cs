@@ -148,13 +148,18 @@ namespace TCPServer
         {
             // salvam rezultatele simularii conform mesajelor din coada de inputs de la clienti
             List<String> replies = new List<String>();
-            Stopwatch sw = new Stopwatch();
-            float dT = 0.0f;
-            sw.Start();
+            DateTime dtStart = DateTime.Now;
+            DateTime dtStop;
+            double dT = 0.0f;
             SetTimer();
 
             while (true)
             {
+                dtStop = DateTime.Now;
+                dT = (dtStop - dtStart).TotalMilliseconds / 1000;
+                dtStart = dtStop;
+
+
                 // inputurile care au venit de la clienti si nu au fost procesate
                 List<String> inputs = getClientInputs();
                 
@@ -187,13 +192,9 @@ namespace TCPServer
                 }
                 replies.Clear();
                 
-                simulate(dT);
-                sw.Stop();
-                dT = (float)sw.Elapsed.TotalSeconds;
-                Console.WriteLine((float)sw.Elapsed.TotalSeconds);
-                sw.Restart();
+                simulate((float)dT);
 
-                Thread.Sleep((int)(1000.0f / 60.0f) - (int) dT * 1000);
+                Thread.Sleep(Math.Max((int)(1000.0f / 60.0f - dT), 0));
             }
         }
         public override void ProcessPayload(ClientNode c, string payload)
