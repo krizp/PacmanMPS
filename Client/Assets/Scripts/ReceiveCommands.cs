@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using System.Timers;
+
 public class ReceiveCommands : MonoBehaviour {
 
     public PersistentSharpConnector conn;
@@ -11,8 +13,13 @@ public class ReceiveCommands : MonoBehaviour {
 
 	bool receivedLabyrinth;
 
+    // aceasta valoarea va fi afisata pe ecran
+    int timer = 19;
+
     public Sprite jekyllSprite;
     public Sprite hydeSprite;
+
+    System.Timers.Timer transitionTimer = new System.Timers.Timer(1000);
 
     // Use this for initialization
     void Start ()
@@ -26,6 +33,10 @@ public class ReceiveCommands : MonoBehaviour {
         PlayerController.jekyllSprite = jekyllSprite;
         PlayerController.hydeSprite = hydeSprite;
 
+        // Hook up the Elapsed event for the timer. 
+        transitionTimer.Elapsed += OnTimedEvent;
+        transitionTimer.AutoReset = true;
+
     }
 
     void Awake()
@@ -34,6 +45,14 @@ public class ReceiveCommands : MonoBehaviour {
         DontDestroyOnLoad(this);
     }
 
+    void OnTimedEvent(System.Object source, ElapsedEventArgs e)
+    {
+        
+        Debug.Log(timer);
+        if (timer > 0)
+            --timer;
+
+    }
 
     void treatCommand(List<string> receivedPayload)
     {
@@ -43,6 +62,7 @@ public class ReceiveCommands : MonoBehaviour {
             {
                 // received the start game command
                 UnityEngine.SceneManagement.SceneManager.LoadScene("GameScene");
+                transitionTimer.Enabled = true;
             }
             else if (command[1] == '2') // M2 -> primesc matrice
             {
@@ -74,6 +94,11 @@ public class ReceiveCommands : MonoBehaviour {
                     p.pos = initPos;
                     playerController.players.Add(p);
                 }
+
+                int hyde_id = Int32.Parse(positions[positions.Length - 1]);
+                playerController.players[hyde_id].is_hyde = true;
+                playerController.hydeId = hyde_id;
+               
                 conn.SendToServer("Done positioning");
                 Debug.Log("Pasul 3");
             }
@@ -92,6 +117,14 @@ public class ReceiveCommands : MonoBehaviour {
                 playerController.players[id].crt_dir = new Vector2(float.Parse(crt_dir[0]), float.Parse(crt_dir[1]));
                 playerController.players[id].next_dir = new Vector2(float.Parse(next_dir[0]), float.Parse(next_dir[1]));
                 playerController.players[id].turn_point = new Vector2(float.Parse(turn_point[0]), float.Parse(turn_point[1]));
+
+            }
+            else if (command[1] == '5')
+            {
+                transitionTimer.Stop();
+                playerController.transition(Int32.Parse(command.Substring(2)));
+                timer = 19;
+                transitionTimer.Enabled = true;
 
             }
 
@@ -120,7 +153,7 @@ public class ReceiveCommands : MonoBehaviour {
             // doesn't receive anything
             //return;
         }
-        Debug.Log("controller gen: " + playerController.gen);
+        //Debug.Log("controller gen: " + playerController.gen);
 
 
         treatCommand(receivedPayload);

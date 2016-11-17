@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Numerics;
 using System.Threading;
 using System.Diagnostics;
+using System.Timers;
 
 namespace TCPServer
 {
@@ -23,6 +24,13 @@ namespace TCPServer
         const int WALL = 0;
         const int PATH = 1;
 
+        const float razaCerc = 2.0f;
+
+        System.Timers.Timer transitionTimer;
+
+        ClientNode.Player Hyde;
+        Object hydeMutex = new Object();
+
         public GameServer() : base()
 		{
             clientInputs = new List<String>();
@@ -30,8 +38,34 @@ namespace TCPServer
  
         }
 
-		// Called when the game starts
-		public void StartGame()
+        void SetTimer()
+        {
+            // Create a timer with a two second interval.
+            transitionTimer = new System.Timers.Timer(20000);
+            // Hook up the Elapsed event for the timer. 
+            transitionTimer.Elapsed += OnTimedEvent;
+            transitionTimer.AutoReset = true;
+            transitionTimer.Enabled = true;
+        }
+
+        void OnTimedEvent(Object source, ElapsedEventArgs e)
+        {
+            lock (hydeMutex)
+            {
+                ClientNode.Player victim;
+                float distance;
+                findNearestVictim(out victim, out distance);
+
+                Hyde = victim;
+
+                SendToAllClients("M5" + Hyde.id);
+            }
+        }
+
+
+
+        // Called when the game starts
+        public void StartGame()
 		{
 			Console.WriteLine("Game Started!");
 
@@ -45,6 +79,33 @@ namespace TCPServer
             SendToAllClients("M2" + CreateMazePayload(maze));
 			numOfReplies = 0;
 		}
+
+        float euclidianDistance(Vector2 a, Vector2 b)
+        {
+            return (float) Math.Sqrt((a.X - b.X) * (a.X - b.X) + (a.Y - b.Y) * (a.Y - b.Y));
+        }
+
+        void findNearestVictim(out ClientNode.Player victim, out float distance)
+        {
+            float minim = Int32.MaxValue;
+
+            victim = null;
+
+            foreach (ClientNode client in _connectedClients)
+            {
+                if (client.player.id == Hyde.id)
+                    continue;
+
+                distance = euclidianDistance(client.player.pos, Hyde.pos);
+                if (distance < minim)
+                {
+                    minim = distance;
+                    victim = client.player;
+                }
+            }
+
+            distance = minim;
+        }
 
         void simulate(float dT)
         {
@@ -68,8 +129,18 @@ namespace TCPServer
 
                 _connectedClients[i].player.pos = _connectedClients[i].player.pos + 
                     dT * _connectedClients[i].player.speed * _connectedClients[i].player.crt_dir;
+            }
 
-    
+            lock (hydeMutex)
+            {
+                ClientNode.Player victim;
+                float distance;
+                findNearestVictim(out victim, out distance);
+
+                if (distance < razaCerc)
+                {
+                    // TO DO -> coliziun jucatori
+                }
             }
         }
 
@@ -80,6 +151,8 @@ namespace TCPServer
             Stopwatch sw = new Stopwatch();
             float dT = 0.0f;
             sw.Start();
+            SetTimer();
+
             while (true)
             {
                 // inputurile care au venit de la clienti si nu au fost procesate
@@ -142,6 +215,10 @@ namespace TCPServer
                 }
                 if (numOfReplies == _connectedClients.Count)
                 {
+                    //construim  M3
+                    // x1,y1|x2,y2|.....|xn,yn|id
+                    // xi,yi -> pozitiile de start ale jucatorilor
+                    // id -> cine este Hyde
                     Console.WriteLine("Toti au primit matricea");
                     numOfReplies = 0;
                     /* numarul de zone din harta */
@@ -180,6 +257,9 @@ namespace TCPServer
                     }
 
 
+                    int hyde = random.Next(_connectedClients.Count);
+                    message += hyde;
+                    Hyde = _connectedClients[hyde].player;
                     // Send message to all clients to start the game
                     SendToAllClients(message);
                     Console.WriteLine("Am trimis mesajul :  " + message);

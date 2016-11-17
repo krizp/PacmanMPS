@@ -35,7 +35,11 @@ public class PlayerController{
         {
             obj = new GameObject("Player" + id);
             renderer = obj.AddComponent<SpriteRenderer>();
-            renderer.sprite = jekyllSprite;
+            if (!is_hyde)
+                renderer.sprite = jekyllSprite;
+            else
+                renderer.sprite = hydeSprite;
+            //Debug.Log("=============> " + jekyllSprite.textureRect.width / jekyllSprite.pixelsPerUnit);
             renderer.sortingLayerName = "Player";
         }
     }
@@ -44,6 +48,7 @@ public class PlayerController{
     public int myId;
 
     public List<Player> players;
+    public int hydeId;
 
     public static Vector2 RIGHT, LEFT, DOWN, UP, NONE;
 
@@ -79,6 +84,15 @@ public class PlayerController{
         player.speed = jekyll_speed;*/
 
 	}
+
+    public void transition(int new_hyde)
+    {
+        players[hydeId].is_hyde = false;
+        players[hydeId].renderer.sprite = jekyllSprite;
+        players[new_hyde].is_hyde = true;
+        players[new_hyde].renderer.sprite = hydeSprite;
+        hydeId = new_hyde;
+    }
 
     public void setWorldGeneration(WorldGeneration g)
     {
@@ -159,9 +173,10 @@ public class PlayerController{
             }
 
             players[i].pos = players[i].pos + Time.deltaTime * players[i].speed * players[i].crt_dir;
-            Debug.Log(Time.deltaTime);
+            //Debug.Log(Time.deltaTime);
 
             players[i].obj.transform.position = players[i].pos * gen.getTileSize();
+            //Debug.Log(gen.getTileSize());
         }
     }
 
