@@ -213,4 +213,9 @@ public class MazeGenerator
 	{
 		return dimension;
 	}
+
+	public bool IsWall(int clientRow, int clientColumn)
+	{
+		return finalMap[clientRow, clientColumn] == 0;
+	}
 }

@@ -35,7 +35,7 @@ public class PersistentSharpConnector : MonoBehaviour
 		conn.Send(payload);
 	}
 
-	public List<string> ReceveFromServer()
+	public List<string> ReceiveFromServer()
 	{
 		return conn.Rececive();
 	}

@@ -83,7 +83,8 @@ namespace TCPServer
                     index = _connectedClients.Count;
 					_connectedClients.Add(cNode);
 				}
-                cNode.Send("M1" + index);
+				cNode.player.id = index;
+                cNode.Send("M1|" + index);
 				cNode.BeginRead();
 			}
 			catch (Exception exc)
@@ -117,7 +118,7 @@ namespace TCPServer
 		{
 			List<string> result = new List<string>();
 
-			_connectedClients.ForEach(c => result.Add(c.name + " " + c.strId));
+			_connectedClients.ForEach(c => result.Add(c.strId));
 
 			return result;
 		}

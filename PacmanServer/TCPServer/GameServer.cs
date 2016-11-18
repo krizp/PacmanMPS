@@ -20,25 +20,182 @@ namespace TCPServer
 
         List<String> clientInputs;
         MazeGenerator mg;
+
 		int numOfReplies;
-        const int WALL = 0;
-        const int PATH = 1;
+		Object repliesMutex = new object();
 
         const float razaCerc = 2.0f;
 
-        System.Timers.Timer transitionTimer;
+		System.Timers.Timer transitionTimer;
 
-        ClientNode.Player Hyde;
-        Object hydeMutex = new Object();
+        Player Hyde;
+        Object hydeMutex = new object();
 
         public GameServer() : base()
 		{
             clientInputs = new List<String>();
-
- 
         }
 
-        void SetTimer()
+		// Called when the game starts
+		public void StartGame()
+		{
+			Console.WriteLine("Game Started!");
+
+			// Deny any atempt to connect at the server
+			_acceptClients = false;
+
+			mg = new MazeGenerator();
+			int[,] maze = mg.computeFinalMap();
+			Player.labyrinth = maze;
+
+			SendToAllClients(CreateMazePayload(maze));
+			numOfReplies = 0;
+		}
+
+		public override void ProcessPayload(ClientNode c, string payload)
+		{
+			Console.WriteLine(c.ToString() + " " + payload);
+
+			if (payload == "Disconnect")
+			{
+				DisconnectClient(c);
+				c.Disconnect();
+
+				SendToAllClients("M6|" + c.player.id);
+			}
+
+			else if (payload.Substring(0, 4) == "Name")
+			{
+				string[] data = payload.Split('|');
+				int playerID = int.Parse(data[1]);
+				_connectedClients[playerID].player.name = data[2];
+			}
+
+			else if (payload == "Done creating labyrinth")
+			{
+				lock (repliesMutex)
+				{
+					numOfReplies++;
+					Console.WriteLine("numOfReplies = : " + numOfReplies);
+				}
+
+				if (numOfReplies == _connectedClients.Count)
+				{
+					numOfReplies = 0;
+
+					Random random = new Random();
+					int hyde = random.Next(_connectedClients.Count);
+					Hyde = _connectedClients[hyde].player;
+					Hyde.speed = Player.HYDE_SPEED;
+
+					SendToAllClients(CreateInitPlayersPayload(hyde));
+				}
+			}
+
+			else if (payload == "Done positioning")
+			{
+				lock (mg)
+				{
+					numOfReplies++;
+				}
+
+				if (numOfReplies == _connectedClients.Count)
+				{
+					Console.WriteLine("Trimit start");
+					SendToAllClients("Start");
+
+					ThreadStart childref = new ThreadStart(playGame);
+					Console.WriteLine("In Main: Creating the Child thread");
+					Thread childThread = new Thread(childref);
+					childThread.Start();
+				}
+			}
+			// received input from a client
+			else if (payload.Substring(0, 4) == "Dir:")
+			{
+				lock (clientInputs)
+				{
+					clientInputs.Add(payload.Substring(4));
+				}
+			}
+		}
+
+		public void playGame()
+		{
+			// salvam rezultatele simularii conform mesajelor din coada de inputs de la clienti
+			List<String> replies = new List<String>();
+			DateTime dtStart = DateTime.Now;
+			DateTime dtStop;
+			double dT = 0.0f;
+			SetTimer();
+
+			while (_connectedClients.Count > 0)
+			{
+				dtStop = DateTime.Now;
+				dT = (dtStop - dtStart).TotalMilliseconds / 1000;
+				dtStart = dtStop;
+
+
+				// inputurile care au venit de la clienti si nu au fost procesate
+				List<String> inputs = getClientInputs();
+
+				foreach (String input in inputs)
+				{
+					string[] info = input.Split(',');
+					//string message = "";
+					int clientId = Int32.Parse(info[0]);
+					int clientIndex = GetPlayerIndex(clientId);
+					_connectedClients[clientIndex].player.ChangeDirection(info[1]);
+
+					// mesajul trimis la clienti
+					// id + pos + crt_dir + next_dir + turning_point
+					string message = "M4|" + clientId + "|"
+					   + _connectedClients[clientIndex].player.pos.X + ","
+					   + _connectedClients[clientIndex].player.pos.Y + "|"
+					   + _connectedClients[clientIndex].player.crt_dir.X + ","
+					   + _connectedClients[clientIndex].player.crt_dir.Y + "|"
+					   + _connectedClients[clientIndex].player.next_dir.X + ","
+					   + _connectedClients[clientIndex].player.next_dir.Y + "|"
+					   + _connectedClients[clientIndex].player.turn_point.X + ","
+					   + _connectedClients[clientIndex].player.turn_point.Y;
+
+					replies.Add(message);
+				}
+
+				// trimitem la clienti ce a actualizat server-ul in urma ultimelor input-uri
+				foreach (string reply in replies)
+				{
+					SendToAllClients(reply);
+				}
+				replies.Clear();
+
+				simulate((float)dT);
+
+				Thread.Sleep(Math.Max((int)(1000.0f / 60.0f - dT * 1000.0f), 0));
+			}
+		}
+
+		void simulate(float dT)
+		{
+			for (int i = 0; i < _connectedClients.Count; ++i)
+			{
+				_connectedClients[i].player.Update(dT);
+			}
+
+			lock (hydeMutex)
+			{
+				Player victim;
+				float distance;
+				findNearestVictim(out victim, out distance);
+
+				if (distance < razaCerc)
+				{
+					// TO DO -> coliziun jucatori
+				}
+			}
+		}
+
+		void SetTimer()
         {
             // Create a timer with a two second interval.
             transitionTimer = new System.Timers.Timer(20000);
@@ -52,40 +209,19 @@ namespace TCPServer
         {
             lock (hydeMutex)
             {
-                ClientNode.Player victim;
+                Player victim;
                 float distance;
                 findNearestVictim(out victim, out distance);
 
+				Hyde.speed = Player.JEKYLL_SPEED;
                 Hyde = victim;
+				Hyde.speed = Player.HYDE_SPEED;
 
-                SendToAllClients("M5" + Hyde.id);
+                SendToAllClients("M5|" + Hyde.id);
             }
         }
 
-
-
-        // Called when the game starts
-        public void StartGame()
-		{
-			Console.WriteLine("Game Started!");
-
-			// Deny any atempt to connect at the server
-			_acceptClients = false;
-
-			mg = new MazeGenerator();
-			int[,] maze = mg.computeFinalMap();
-            ClientNode.labyrinth = maze;
-
-            SendToAllClients("M2" + CreateMazePayload(maze));
-			numOfReplies = 0;
-		}
-
-        float euclidianDistance(Vector2 a, Vector2 b)
-        {
-            return (float) Math.Sqrt((a.X - b.X) * (a.X - b.X) + (a.Y - b.Y) * (a.Y - b.Y));
-        }
-
-        void findNearestVictim(out ClientNode.Player victim, out float distance)
+        void findNearestVictim(out Player victim, out float distance)
         {
             float minim = Int32.MaxValue;
 
@@ -96,7 +232,7 @@ namespace TCPServer
                 if (client.player.id == Hyde.id)
                     continue;
 
-                distance = euclidianDistance(client.player.pos, Hyde.pos);
+				distance = Vector2.Distance(client.player.pos, Hyde.pos);
                 if (distance < minim)
                 {
                     minim = distance;
@@ -107,194 +243,18 @@ namespace TCPServer
             distance = minim;
         }
 
-        void simulate(float dT)
-        {
-            for (int i = 0; i < _connectedClients.Count; ++i)
-            {
-                if (_connectedClients[i].player.crt_dir == NONE)
-                {
-                    _connectedClients[i].player.crt_dir = _connectedClients[i].player.next_dir;
-                    _connectedClients[i].update_turning_point();
-                }
+		private int GetPlayerIndex(int id)
+		{
+			for (int i = 0; i < _connectedClients.Count; i++)
+			{
+				if (id == _connectedClients[i].player.id)
+				{
+					return i;
+				}
+			}
 
-                if (_connectedClients[i].player.crt_dir == UP && _connectedClients[i].player.pos.Y >= _connectedClients[i].player.turn_point.Y ||
-                    _connectedClients[i].player.crt_dir == DOWN && _connectedClients[i].player.pos.Y <= _connectedClients[i].player.turn_point.Y ||
-                    _connectedClients[i].player.crt_dir == RIGHT && _connectedClients[i].player.pos.X >= _connectedClients[i].player.turn_point.X ||
-                    _connectedClients[i].player.crt_dir == LEFT && _connectedClients[i].player.pos.X <= _connectedClients[i].player.turn_point.X)
-                {
-                    _connectedClients[i].player.pos = _connectedClients[i].player.turn_point;
-                    _connectedClients[i].player.crt_dir = _connectedClients[i].player.next_dir;
-                    _connectedClients[i].update_turning_point();
-                }
-
-                _connectedClients[i].player.pos = _connectedClients[i].player.pos + 
-                    dT * _connectedClients[i].player.speed * _connectedClients[i].player.crt_dir;
-            }
-
-            lock (hydeMutex)
-            {
-                ClientNode.Player victim;
-                float distance;
-                findNearestVictim(out victim, out distance);
-
-                if (distance < razaCerc)
-                {
-                    // TO DO -> coliziun jucatori
-                }
-            }
-        }
-
-        public void playGame()
-        {
-            // salvam rezultatele simularii conform mesajelor din coada de inputs de la clienti
-            List<String> replies = new List<String>();
-            DateTime dtStart = DateTime.Now;
-            DateTime dtStop;
-            double dT = 0.0f;
-            SetTimer();
-
-            while (true)
-            {
-                dtStop = DateTime.Now;
-                dT = (dtStop - dtStart).TotalMilliseconds / 1000;
-                dtStart = dtStop;
-
-
-                // inputurile care au venit de la clienti si nu au fost procesate
-                List<String> inputs = getClientInputs();
-                
-                foreach (String input in inputs)
-                {
-                    string[] info = input.Split(',');
-                    //string message = "";
-                    int clientId = Int32.Parse(info[0]);
-                    _connectedClients[clientId].treatInput(info[1]);
-
-                    // mesajul trimis la clienti
-                    // id + pos + crt_dir + next_dir + turning_point
-                     string message = "M4" + clientId + ","
-                        + _connectedClients[clientId].player.pos.X +
-                        ";" +  _connectedClients[clientId].player.pos.Y +","
-                        + _connectedClients[clientId].player.crt_dir.X + ";" 
-                        + _connectedClients[clientId].player.crt_dir.Y + ","
-                        + _connectedClients[clientId].player.next_dir.X + ";" 
-                        + _connectedClients[clientId].player.next_dir.Y + ","
-                        + _connectedClients[clientId].player.turn_point.X + ";"
-                        + _connectedClients[clientId].player.turn_point.Y;
-
-                    replies.Add(message);
-                }
-
-                // trimitem la clienti ce a actualizat server-ul in urma ultimelor input-uri
-                foreach (String reply in replies)
-                {
-                    SendToAllClients(reply);
-                }
-                replies.Clear();
-                
-                simulate((float)dT);
-
-                Thread.Sleep(Math.Max((int)(1000.0f / 60.0f - dT * 1000.0f), 0));
-            }
-        }
-        public override void ProcessPayload(ClientNode c, string payload)
-        {
-            Console.WriteLine(c.ToString() + " " + payload);
-
-            if (payload == "Disconnect")
-            {
-                DisconnectClient(c);
-                c.Disconnect();
-            }
-
-            else if (payload == "Done creating labyrinth")
-            {
-                lock(mg)
-                {
-                    numOfReplies++;
-                    Console.WriteLine("numOfReplies = : " + numOfReplies);
-                }
-                if (numOfReplies == _connectedClients.Count)
-                {
-                    //construim  M3
-                    // x1,y1|x2,y2|.....|xn,yn|id
-                    // xi,yi -> pozitiile de start ale jucatorilor
-                    // id -> cine este Hyde
-                    Console.WriteLine("Toti au primit matricea");
-                    numOfReplies = 0;
-                    /* numarul de zone din harta */
-                    int zones = 2;
-                    int linesPerZone = mg.getDimension() / 2;
-                    int columnsPerZone = 0, zonesPerLine = 0;
-                    int startColumnZone = 0, startLineZone = 0;
-                    int clientRow = 0, clientColumn = 0;
-                    Random random = new Random();
-                    string message = "M3";
-                    while (zones < _connectedClients.Count)
-                    {
-                        zones *= 2;
-                    }
-
-                    columnsPerZone = (mg.getDimension() * 2 - 1) / (zones / 2);
-
-                    zonesPerLine = zones / 2;
-
-                    for (int i = 0; i < _connectedClients.Count; ++i)
-                    {
-                        startColumnZone = (i % zonesPerLine) * columnsPerZone;
-                        startLineZone = (i / zonesPerLine) * linesPerZone;
-                        do
-                        {
-                            clientRow = random.Next(startLineZone, startLineZone + linesPerZone);
-                            clientColumn = random.Next(startColumnZone, startColumnZone + columnsPerZone);
-                        } while (mg.finalMap[clientRow, clientColumn] == WALL);
-
-                        _connectedClients[i].player = new ClientNode.Player(i);
-
-
-                        _connectedClients[i].player.pos = new Vector2(clientColumn, clientRow);
-                        message += _connectedClients[i].player.pos.X + "," + _connectedClients[i].player.pos.Y + "|";
-
-                    }
-
-
-                    int hyde = random.Next(_connectedClients.Count);
-                    message += hyde;
-                    Hyde = _connectedClients[hyde].player;
-                    // Send message to all clients to start the game
-                    SendToAllClients(message);
-                    Console.WriteLine("Am trimis mesajul :  " + message);
-                }
-            }
-
-            else if (payload == "Done positioning")
-            {
-                lock(mg)
-                {
-                    numOfReplies++;
-                }
-                if (numOfReplies == _connectedClients.Count)
-                {
-                    Console.WriteLine("Trimit start");
-                    SendToAllClients("Start");
-
-                    ThreadStart childref = new ThreadStart(playGame);
-                    Console.WriteLine("In Main: Creating the Child thread");
-                    Thread childThread = new Thread(childref);
-                    childThread.Start();
-                }
-            }
-            // received input from a client
-            else if (payload.Substring(0,4) == "Dir:")
-            {
-                lock(clientInputs)
-                {
-                    clientInputs.Add(payload.Substring(4));
-                }
-            }
-
-
-        }
+			return -1;
+		}
 
         public List<string> getClientInputs()
         {
@@ -309,7 +269,7 @@ namespace TCPServer
 
         private string CreateMazePayload(int[,] maze)
 		{
-			string result = "";
+			string result = "M2|";
 			int dim = mg.getDimension();
 
 			result += dim + "|" + (dim * 2 - 1) + "|";
@@ -322,6 +282,55 @@ namespace TCPServer
 					else
 						result += "0";
 			}
+
+			return result;
+		}
+
+		private string CreateInitPlayersPayload(int hydeId)
+		{
+			//construim  M3
+			// x1,y1|x2,y2|.....|xn,yn|id
+			// xi,yi -> pozitiile de start ale jucatorilor
+			// id -> cine este Hyde
+			string result = "M3|";
+
+			/* numarul de zone din harta */
+			int zones = 2;
+			int linesPerZone = mg.getDimension() / 2;
+			int columnsPerZone = 0, zonesPerLine = 0;
+			int startColumnZone = 0, startLineZone = 0;
+			int clientRow = 0, clientColumn = 0;
+			Random random = new Random();
+
+			while (zones < _connectedClients.Count)
+			{
+				zones *= 2;
+			}
+
+			columnsPerZone = (mg.getDimension() * 2 - 1) / (zones / 2);
+
+			zonesPerLine = zones / 2;
+
+			for (int i = 0; i < _connectedClients.Count; ++i)
+			{
+				startColumnZone = (i % zonesPerLine) * columnsPerZone;
+				startLineZone = (i / zonesPerLine) * linesPerZone;
+				do
+				{
+					clientRow = random.Next(startLineZone, startLineZone + linesPerZone);
+					clientColumn = random.Next(startColumnZone, startColumnZone + columnsPerZone);
+
+				} while (mg.IsWall(clientRow, clientColumn));
+
+				_connectedClients[i].player.pos = new Vector2(clientColumn, clientRow);
+
+				result += _connectedClients[i].player.id + "," +
+							_connectedClients[i].player.name + "," +
+							_connectedClients[i].player.pos.X + "," +
+							_connectedClients[i].player.pos.Y + "|";
+			}
+
+			result += hydeId;
 
 			return result;
 		}

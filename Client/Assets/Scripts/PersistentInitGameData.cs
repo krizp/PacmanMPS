@@ -1,11 +1,17 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 public class PersistentInitGameData : MonoBehaviour
 {
 	public int[][] labyrinth;
 
-	bool doneCreatingLabyrinth;
+	public string playerName;
+	public int playerID;
+	public int hydeID;
+	
+	public List<Player> players;
 
 	void Awake()
 	{
@@ -15,7 +21,33 @@ public class PersistentInitGameData : MonoBehaviour
 
 	void Start()
 	{
-		doneCreatingLabyrinth = false;
+	}
+
+	public void CreateInitPlayers(string s)
+	{
+		players = new List<Player>();
+
+		string[] playersInfo = s.Split('|');
+
+		for (int i = 0; i < playersInfo.Length - 1; ++i)
+		{
+			string[] playerInfo = playersInfo[i].Split(',');
+
+			Player p = new Player();
+			p.id = int.Parse(playerInfo[0]);
+			p.name = playerInfo[1];
+			p.pos.x = int.Parse(playerInfo[2]);
+			p.pos.y = int.Parse(playerInfo[3]);
+
+			players.Add(p);
+		}
+
+
+		hydeID = int.Parse(playersInfo[playersInfo.Length - 1]);
+
+		Player hyde = players.FirstOrDefault(p => p.id == hydeID);
+		hyde.is_hyde = true;
+		hyde.speed = Player.HYDE_SPEED;
 	}
 	
 	public void CreateLabyrinth(string s)
@@ -37,17 +69,5 @@ public class PersistentInitGameData : MonoBehaviour
 				labyrinth[i][j] = res[2][k++] - '0';
 			}
 		}
-
-		doneCreatingLabyrinth = true;
-	}
-
-	public bool DoneCreatingLabyrinth()
-	{
-		return doneCreatingLabyrinth;
-	}
-
-	public int[][] GetLabyrinth()
-	{
-		return labyrinth;
 	}
 }

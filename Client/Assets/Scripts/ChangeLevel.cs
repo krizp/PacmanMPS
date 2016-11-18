@@ -5,9 +5,10 @@ using UnityEngine.UI;
 public class ChangeLevel : MonoBehaviour
 {
 	public Text serverIpAddress;
-	public Text userName;
+	public Text playerName;
 
 	public PersistentSharpConnector conn;
+	public PersistentInitGameData initData;
 
     public GameObject canvasMain;
     public GameObject canvasWaiting;
@@ -27,7 +28,10 @@ public class ChangeLevel : MonoBehaviour
 		if (conn.ConnectToServer(serverIpAddress.text, 2737))
 		{
             Debug.Log("Connect to server succeeded!");
-            canvasMain.SetActive(false);
+
+			initData.playerName = playerName.text;
+
+			canvasMain.SetActive(false);
             canvasWaiting.SetActive(true);
 		}
 		else
