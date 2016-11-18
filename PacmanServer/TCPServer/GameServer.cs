@@ -31,6 +31,9 @@ namespace TCPServer
         Player hydePlayer;
         Object hydeMutex = new object();
 
+        const int GAME_ON = 0;
+        const int GAME_OVER = 1;
+
         public GameServer() : base()
 		{
             clientInputs = new List<String>();
@@ -196,13 +199,17 @@ namespace TCPServer
 				}
 				replies.Clear();
 
-				simulate((float)dT);
+				if (simulate((float)dT) == GAME_OVER)
+                {
+                    transitionTimer.Enabled = false;
+                    break;
+                }
 
 				Thread.Sleep(Math.Max((int)(1000.0f / 60.0f - dT * 1000.0f), 0));
 			}
 		}
 
-		void simulate(float dT)
+		int simulate(float dT)
 		{
 			for (int i = 0; i < _connectedClients.Count; ++i)
 			{
@@ -224,7 +231,7 @@ namespace TCPServer
                         if (hydePlayer.score == scoreToWin)
                         {
                             SendToAllClients("M8|Game Over");
-                            break;
+                            return GAME_OVER;
                         }
 
                         client.player.Respown(hydePlayer.pos);
@@ -235,6 +242,8 @@ namespace TCPServer
 					}
 				}
 			}
+
+            return GAME_ON;
 		}
 
 		void SetTimer()
