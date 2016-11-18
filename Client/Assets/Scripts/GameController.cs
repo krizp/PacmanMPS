@@ -136,10 +136,11 @@ public class GameController : MonoBehaviour
 	{
 		foreach (string command in receivedPayload)
 		{
-			if (command.Substring(0, 2) == "M4")
+			if (command.Substring(0, 2) == "M4")		// datele unui player
 			{
 				string data = command.Substring(3);
 				string[] datas = data.Split('|');
+
 				int id = int.Parse(datas[0]);
 				string[] pos = datas[1].Split(',');
 				string[] crt_dir = datas[2].Split(',');
@@ -153,19 +154,32 @@ public class GameController : MonoBehaviour
 				players[playerIndex].next_dir = new Vector2(float.Parse(next_dir[0]), float.Parse(next_dir[1]));
 				players[playerIndex].turn_point = new Vector2(float.Parse(turn_point[0]), float.Parse(turn_point[1]));
 			}
-			else if (command.Substring(0, 2) == "M5")
+			else if (command.Substring(0, 2) == "M5")			// timer stop
 			{
 				transitionTimer.Stop();
 				ChangeMrHyde(int.Parse(command.Substring(3)));
 				timer = 19;
 				transitionTimer.Enabled = true;
 			}
-			else if (command.Substring(0, 2) == "M6")
+			else if (command.Substring(0, 2) == "M6")			// client disconnected
 			{
 				int id = int.Parse(command.Substring(3));
 				Player disconnectedPlayer = players.FirstOrDefault(p => p.id == id);
 				disconnectedPlayer.RemoveFromLabyrinth();
 				players.Remove(disconnectedPlayer);
+			}
+			else if (command.Substring(0, 2) == "M7")			// collision
+			{
+				string data = command.Substring(3);
+				string[] datas = data.Split('|');
+
+				int id = int.Parse(datas[0]);
+				string[] pos = datas[1].Split(',');
+
+				int playerIndex = GetPlayerIndex(id);
+				players[playerIndex].Respown(int.Parse(pos[0]), int.Parse(pos[1]));
+
+				conn.SendToServer("Respown completed");
 			}
 		}
 	}

@@ -18,8 +18,10 @@ namespace TCPServer
 		public float	speed;
 		public bool		is_hyde;
 		public string	name;
+		public bool		isHit;
 
 		public static int[,] labyrinth;
+		public static int labyrinthDim;
 
 		public const int WALL = 0;
 		public const int PATH = 1;
@@ -214,6 +216,27 @@ namespace TCPServer
 				return (int)Math.Ceiling(pos);
 			}
 			else return (int)pos;
+		}
+
+		public Vector2 GetLabyrinthIndex()
+		{
+			return new Vector2(get_next_idx(pos.X, crt_dir.X), get_next_idx(pos.Y, crt_dir.Y));
+		}
+
+		public void Respown(Vector2 hydePos)
+		{
+			Random random = new Random();
+
+			do
+			{
+				pos.X = random.Next(labyrinthDim * 2 - 1);
+				pos.Y = random.Next(labyrinthDim);
+
+			} while (labyrinth[(int)pos.Y, (int)pos.X] == WALL || Vector2.Distance(pos, hydePos) < labyrinthDim / 2);
+
+			crt_dir = NONE;
+			next_dir = NONE;
+			isHit = true;
 		}
 	}
 }

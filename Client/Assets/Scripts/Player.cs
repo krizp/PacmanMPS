@@ -214,6 +214,15 @@ public class Player
 
 	public void RemoveFromLabyrinth()
 	{
-		GameObject.Destroy(obj);
+		UnityEngine.Object.Destroy(obj);
+	}
+
+	public void Respown(int x, int y)
+	{
+		pos = new Vector2(x, y);
+		crt_dir = NONE;
+		next_dir = NONE;
+
+		obj.transform.position = pos * TILE_SIZE;
 	}
 }

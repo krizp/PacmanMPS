@@ -28,7 +28,7 @@ namespace TCPServer
 
 		System.Timers.Timer transitionTimer;
 
-        Player Hyde;
+        Player hydePlayer;
         Object hydeMutex = new object();
 
         public GameServer() : base()
@@ -47,6 +47,7 @@ namespace TCPServer
 			mg = new MazeGenerator();
 			int[,] maze = mg.computeFinalMap();
 			Player.labyrinth = maze;
+			Player.labyrinthDim = mg.getDimension();
 
 			SendToAllClients(CreateMazePayload(maze));
 			numOfReplies = 0;
@@ -85,10 +86,10 @@ namespace TCPServer
 
 					Random random = new Random();
 					int hyde = random.Next(_connectedClients.Count);
-					Hyde = _connectedClients[hyde].player;
-					Hyde.speed = Player.HYDE_SPEED;
+					hydePlayer = _connectedClients[hyde].player;
+					hydePlayer.speed = Player.HYDE_SPEED;
 
-					SendToAllClients(CreateInitPlayersPayload(hyde));
+					SendToAllClients(CreateInitPlayersPayload(hydePlayer.id));
 				}
 			}
 
@@ -117,6 +118,23 @@ namespace TCPServer
 				{
 					clientInputs.Add(payload.Substring(4));
 				}
+			}
+
+			else if (payload == "Respown completed")
+			{
+				c.player.isHit = false;
+
+				string message = "M4|" + c.player.id + "|"
+					   + c.player.pos.X + ","
+					   + c.player.pos.Y + "|"
+					   + c.player.crt_dir.X + ","
+					   + c.player.crt_dir.Y + "|"
+					   + c.player.next_dir.X + ","
+					   + c.player.next_dir.Y + "|"
+					   + c.player.turn_point.X + ","
+					   + c.player.turn_point.Y;
+
+				SendToAllClients(message);
 			}
 		}
 
@@ -184,13 +202,19 @@ namespace TCPServer
 
 			lock (hydeMutex)
 			{
-				Player victim;
-				float distance;
-				findNearestVictim(out victim, out distance);
-
-				if (distance < razaCerc)
+				foreach (var client in _connectedClients)
 				{
-					// TO DO -> coliziun jucatori
+					if (client.player == hydePlayer)
+						continue;
+
+					if (client.player.GetLabyrinthIndex() == hydePlayer.GetLabyrinthIndex() && !client.player.isHit)
+					{
+						// coliziune
+						client.player.Respown(hydePlayer.pos);
+						client.Send("M7|" + client.player.id + "|" + client.player.pos.X + "," + client.player.pos.Y);
+						Console.WriteLine("COLIZIUNE!");
+						break;
+					}
 				}
 			}
 		}
@@ -213,11 +237,11 @@ namespace TCPServer
                 float distance;
                 findNearestVictim(out victim, out distance);
 
-				Hyde.speed = Player.JEKYLL_SPEED;
-                Hyde = victim;
-				Hyde.speed = Player.HYDE_SPEED;
+				hydePlayer.speed = Player.JEKYLL_SPEED;
+                hydePlayer = victim;
+				hydePlayer.speed = Player.HYDE_SPEED;
 
-                SendToAllClients("M5|" + Hyde.id);
+                SendToAllClients("M5|" + hydePlayer.id);
             }
         }
 
@@ -229,10 +253,10 @@ namespace TCPServer
 
             foreach (ClientNode client in _connectedClients)
             {
-                if (client.player.id == Hyde.id)
+                if (client.player.id == hydePlayer.id)
                     continue;
 
-				distance = Vector2.Distance(client.player.pos, Hyde.pos);
+				distance = Vector2.Distance(client.player.pos, hydePlayer.pos);
                 if (distance < minim)
                 {
                     minim = distance;
