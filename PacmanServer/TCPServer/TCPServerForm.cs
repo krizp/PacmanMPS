@@ -124,7 +124,7 @@ namespace TCPServer
 
 		private void btnStartGame_Click(object sender, EventArgs e)
 		{
-			_server.StartGame();
+			_server.StartGame(Decimal.ToInt32(numericUpDown1.Value));
 		}
 	}
 }

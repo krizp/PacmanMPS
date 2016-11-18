@@ -13,9 +13,19 @@ public class ChangeLevel : MonoBehaviour
     public GameObject canvasMain;
     public GameObject canvasWaiting;
 
+    public bool isFirstTime = false;
+
 	// Use this for initialization
 	void Start () {
         canvasWaiting.SetActive(false);
+        if (!isFirstTime)
+        {
+            GameObject persistentInitDataObj = GameObject.FindGameObjectWithTag("PersistentInitGameData") as GameObject;
+            initData = persistentInitDataObj.GetComponent<PersistentInitGameData>();
+
+            GameObject persistentSharpConnectorObj = GameObject.FindGameObjectWithTag("PersistentSharpConnector") as GameObject;
+            conn = persistentSharpConnectorObj.GetComponent<PersistentSharpConnector>();
+        }
 	}
 	
 	// Update is called once per frame
@@ -25,7 +35,7 @@ public class ChangeLevel : MonoBehaviour
 
     public void startGame()
     {
-		if (conn.ConnectToServer(serverIpAddress.text, 2737))
+		if (isFirstTime && conn.ConnectToServer(serverIpAddress.text, 2737))
 		{
             Debug.Log("Connect to server succeeded!");
 
@@ -34,9 +44,19 @@ public class ChangeLevel : MonoBehaviour
 			canvasMain.SetActive(false);
             canvasWaiting.SetActive(true);
 		}
+        else if (!isFirstTime)
+        {
+            canvasMain.SetActive(false);
+            canvasWaiting.SetActive(true);
+        }
 		else
 		{
 			Debug.Log("Connect to server FAILED! :(");
 		}
+    }
+
+    public void exitGame()
+    {
+        Application.Quit();
     }
 }

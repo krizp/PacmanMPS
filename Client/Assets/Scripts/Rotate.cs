@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class Rotate : MonoBehaviour {
-    private float rot_speed = 1.0f;
+    private float rot_speed = 50.0f;
     private Vector3 rot_vec;
 	// Use this for initialization
 	void Start () {
@@ -12,6 +11,6 @@ public class Rotate : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         float dt = Time.deltaTime;
-        this.transform.Rotate(rot_vec);
+        this.transform.Rotate(rot_vec * dt);
 	}
 }

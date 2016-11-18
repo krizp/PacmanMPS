@@ -4,7 +4,8 @@ using System.Collections.Generic;
 
 public class PersistentSharpConnector : MonoBehaviour
 {
-	SharpClient conn;
+    SharpClient conn;
+    private bool connected;
 
 	void Awake()
 	{
@@ -16,6 +17,7 @@ public class PersistentSharpConnector : MonoBehaviour
 	void Start ()
 	{
 		conn = new SharpClient();
+        connected = false;
 	}
 	
 	// Update is called once per frame
@@ -27,6 +29,7 @@ public class PersistentSharpConnector : MonoBehaviour
 	// called when the "join game" button is pressed
 	public bool ConnectToServer(string ip, int port)
 	{
+        connected = true;
 		return conn.Connect(ip, port);
 	}
 
@@ -35,7 +38,12 @@ public class PersistentSharpConnector : MonoBehaviour
 		conn.Send(payload);
 	}
 
-	public List<string> ReceiveFromServer()
+    public bool isConnected()
+    {
+        return connected;
+    }
+
+    public List<string> ReceiveFromServer()
 	{
 		return conn.Rececive();
 	}
@@ -50,5 +58,6 @@ public class PersistentSharpConnector : MonoBehaviour
 		{
 			Debug.Log(ex.Message);
 		}
+        connected = false;
 	}
 }

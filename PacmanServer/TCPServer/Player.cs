@@ -19,6 +19,7 @@ namespace TCPServer
 		public bool		is_hyde;
 		public string	name;
 		public bool		isHit;
+        public int      score;
 
 		public static int[,] labyrinth;
 		public static int labyrinthDim;
@@ -41,6 +42,7 @@ namespace TCPServer
 			crt_dir = NONE;
 			next_dir = NONE;
 			speed = JEKYLL_SPEED;
+            score = 0;
 		}
 
 		public void Update(float dt)

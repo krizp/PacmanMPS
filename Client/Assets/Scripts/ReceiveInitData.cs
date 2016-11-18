@@ -9,9 +9,19 @@ public class ReceiveInitData : MonoBehaviour
     public PersistentSharpConnector conn;
 	public PersistentInitGameData initGameData;
 
+    public bool isFirstTime = false;
+
     // Use this for initialization
     void Start ()
 	{
+        if (!isFirstTime)
+        {
+            GameObject persistentInitDataObj = GameObject.FindGameObjectWithTag("PersistentInitGameData") as GameObject;
+            initGameData = persistentInitDataObj.GetComponent<PersistentInitGameData>();
+
+            GameObject persistentSharpConnectorObj = GameObject.FindGameObjectWithTag("PersistentSharpConnector") as GameObject;
+            conn = persistentSharpConnectorObj.GetComponent<PersistentSharpConnector>();
+        }
     }
 
 	// Update is called once per frame

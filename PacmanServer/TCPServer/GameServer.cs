@@ -17,7 +17,7 @@ namespace TCPServer
         Vector2 DOWN = new Vector2(0, -1);
         Vector2 UP = new Vector2(0, 1);
         Vector2 NONE = new Vector2(0, 0);
-
+        
         List<String> clientInputs;
         MazeGenerator mg;
 
@@ -36,10 +36,14 @@ namespace TCPServer
             clientInputs = new List<String>();
         }
 
+        private int scoreToWin = 10;
+
 		// Called when the game starts
-		public void StartGame()
+		public void StartGame(int scoreToWin)
 		{
 			Console.WriteLine("Game Started!");
+
+            this.scoreToWin = scoreToWin;
 
 			// Deny any atempt to connect at the server
 			_acceptClients = false;
@@ -51,6 +55,11 @@ namespace TCPServer
 
 			SendToAllClients(CreateMazePayload(maze));
 			numOfReplies = 0;
+
+            foreach (ClientNode c in _connectedClients)
+            {
+                c.player.score = 0;
+            }
 		}
 
 		public override void ProcessPayload(ClientNode c, string payload)
@@ -209,10 +218,19 @@ namespace TCPServer
 
 					if (client.player.GetLabyrinthIndex() == hydePlayer.GetLabyrinthIndex() && !client.player.isHit)
 					{
-						// coliziune
-						client.player.Respown(hydePlayer.pos);
+                        // coliziune
+                        hydePlayer.score++;
+
+                        if (hydePlayer.score == scoreToWin)
+                        {
+                            SendToAllClients("M8|Game Over");
+                            break;
+                        }
+
+                        client.player.Respown(hydePlayer.pos);
 						client.Send("M7|" + client.player.id + "|" + client.player.pos.X + "," + client.player.pos.Y);
 						Console.WriteLine("COLIZIUNE!");
+                        
 						break;
 					}
 				}

@@ -181,6 +181,10 @@ public class GameController : MonoBehaviour
 
 				conn.SendToServer("Respown completed");
 			}
+            else if (command.Substring(0, 2) == "M8")           // game over
+            {
+                UnityEngine.SceneManagement.SceneManager.LoadScene("GameOverScene");
+            }
 		}
 	}
 
@@ -211,7 +215,7 @@ public class GameController : MonoBehaviour
 	void OnTimedEvent(System.Object source, ElapsedEventArgs e)
 	{
 
-		Debug.Log(timer);
+		//Debug.Log(timer);
 		if (timer > 0)
 			--timer;
 
