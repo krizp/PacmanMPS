@@ -264,11 +264,14 @@ namespace TCPServer
                 float distance;
                 findNearestVictim(out victim, out distance);
 
-				hydePlayer.speed = Player.JEKYLL_SPEED;
-                hydePlayer = victim;
-				hydePlayer.speed = Player.HYDE_SPEED;
+                if (victim != null)
+                {
+                    hydePlayer.speed = Player.JEKYLL_SPEED;
+                    hydePlayer = victim;
+                    hydePlayer.speed = Player.HYDE_SPEED;
 
-                SendToAllClients("M5|" + hydePlayer.id);
+                    SendToAllClients("M5|" + hydePlayer.id);
+                }
             }
         }
 
