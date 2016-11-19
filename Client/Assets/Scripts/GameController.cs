@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,7 @@ public class GameController : MonoBehaviour
 
 	// lista cu toti playerii ce joaca
 	private List<Player> players;
+	private List<Text> info_text;
 
 	// id-ul playerului ce ruleaza pe aceast calculator
 	private int myID;
@@ -36,6 +38,9 @@ public class GameController : MonoBehaviour
 
 	Timer transitionTimer = new System.Timers.Timer(1000);
 
+	//HUD
+	public GameObject canvas;
+	public Text exampleText;
 	// Use this for initialization
 	void Start()
 	{
@@ -66,7 +71,7 @@ public class GameController : MonoBehaviour
 
 		// setez camera pt a vedea tot labirintul
 		Vector3 cameraPos = mainCamera.transform.position;
-		cameraPos.x = (labyrinth[0].Length) * tileSize / 2;
+		cameraPos.x = (labyrinth[0].Length) * tileSize / 2 -14;
 		cameraPos.y = (labyrinth.Length - 1) * tileSize / 2;
 
 		mainCamera.transform.position = cameraPos;
@@ -84,10 +89,23 @@ public class GameController : MonoBehaviour
 		DrawLabyrinth();
 
 		// creez playerii ca obiecte
+		int count = 1;
+		Text childText; 
 		foreach (var player in players)
 		{
 			player.createGameObject();
+			player.obj.tag = "Player-" + count.ToString ();
+
+			childText = (Text) Instantiate (GameObject.FindWithTag("Timer").GetComponent<Text>()); 
+			childText.tag = "Info-" + count.ToString ();
+			childText.text = player.name + "-" + player.points.ToString();
+			childText.transform.SetParent(canvas.transform, true);
+			childText.transform.position = new Vector2(143, 325 -(count*20));
+
+			count = count + 1;
 		}
+
+
 	}
 
 
@@ -107,6 +125,97 @@ public class GameController : MonoBehaviour
 		{
 			player.Update(Time.deltaTime);
 		}
+		List<Player> sorted = new List<Player> (players);
+
+		sorted.Sort (delegate(Player x, Player y)
+			{
+				if (x.points == null && y.points== null) return 0;
+				else if (x.points == null) return -1;
+				else if (y.points == null) return 1;
+				else return x.points.CompareTo(y.points);
+			});
+
+		int count_pos = 1;
+		foreach (Transform child in canvas.transform) 
+		{
+			if (child.CompareTag ("Timer"))
+				child.GetComponent<Text> ().text ="Next change:"+timer.ToString();
+			
+			if (child.CompareTag ("Info-"+count_pos.ToString())) {
+				if (players [count_pos-1].is_hyde)
+					child.GetComponent<Text> ().text ="(HYDE)"+ players [count_pos-1].name + "-" + players [count_pos-1].points;
+				else
+					child.GetComponent<Text> ().text ="(JEKYLL)"+ players [count_pos-1].name + "-" + players [count_pos-1].points;
+				count_pos = count_pos + 1;
+			}
+		}
+
+
+		/*
+		  void Update () {
+
+		time -= UnityEngine.Time.deltaTime;
+
+
+		float minutes = time / 60; 
+		float seconds = time % 60;
+		float fraction = (time * 100) % 100;
+
+
+		timer.text = string.Format ("{0:00} : {1:00} : {2:00}",minutes-0.5, seconds, fraction);
+
+		int count_pos = 0;
+		var sortedPlayers = new List<PlayerController>();
+		sortedPlayers.AddRange(players);
+		sortedPlayers.Sort (delegate(PlayerController x, PlayerController y)
+			{
+				if (x.player.score == null && y.player.score== null) return 0;
+				else if (x.player.score == null) return -1;
+				else if (y.player.score == null) return 1;
+				else return x.player.score.CompareTo(y.player.score);
+			});
+		
+		foreach (Transform child in canvas.transform) 
+		{
+			if (child.CompareTag ("player1-text")) {
+				child.GetComponent<Text> ().text = "Player " +"Score:" + player1.player.score;
+				child.GetComponent<Text> ().color=new Color(1.1f, 3.2f, 0.3f);
+
+			}
+
+
+			if (child.CompareTag ("Player2-"+count_pos.ToString())) {
+				child.GetComponent<Text> ().text = sortedPlayers[count_pos].tag +  " Score:" + sortedPlayers [count_pos].player.score;
+				count_pos = count_pos + 1;
+			}
+		}
+			
+		int random_pos = Random.Range (0, possx.Count);
+		if (Vector2.Distance (player1.player.pos, player2.player.pos) < 1.0) {
+
+			player1.player.score = player1.player.score + 1;
+			player2.GetComponent<SpriteRenderer> ().enabled = false;
+			player2.placeOnTile (possx [random_pos], possy [random_pos]);
+
+		} 
+		for (var i = 0; i < numPlayers; i++) {
+			if (Vector2.Distance (players [i].player.pos, player2.player.pos) < 1.0) {
+				
+				players [i].player.score = players [i].player.score + 1;
+				player2.GetComponent<SpriteRenderer> ().enabled = false;
+				player2.placeOnTile (possx [random_pos], possy [random_pos]);
+
+			} else {
+				player2.GetComponent<SpriteRenderer> ().enabled = true;
+			}
+		}
+
+		*/
+
+
+
+
+	 
 	}
 
 	private void TreatInput()
@@ -178,7 +287,8 @@ public class GameController : MonoBehaviour
 
 				int playerIndex = GetPlayerIndex(id);
 				players[playerIndex].Respown(int.Parse(pos[0]), int.Parse(pos[1]));
-
+				players[playerIndex].points-=1;
+				players[hydeID].points += 1;
 				conn.SendToServer("Respown completed");
 			}
             else if (command.Substring(0, 2) == "M8")           // game over
