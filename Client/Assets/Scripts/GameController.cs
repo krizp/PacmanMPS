@@ -146,7 +146,7 @@ public class GameController : MonoBehaviour
         
 		foreach (Transform child in canvas.transform) 
 		{
-			if (child.CompareTag("Timer"))
+			if (child.CompareTag("Timer") && Input.GetKeyDown(KeyCode.Tab))
 				child.GetComponent<Text> ().text ="Next change:"+timer.ToString();
 		}
 
