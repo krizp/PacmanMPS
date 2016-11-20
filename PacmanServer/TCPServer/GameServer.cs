@@ -227,6 +227,7 @@ namespace TCPServer
 					{
                         // coliziune
                         hydePlayer.score++;
+                        client.player.score--;
 
                         if (hydePlayer.score == scoreToWin)
                         {
