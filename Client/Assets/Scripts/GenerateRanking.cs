@@ -8,14 +8,11 @@ public class GenerateRanking : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         txt = GetComponent<Text>();
-        int n = 12;
-        for (int i = 1; i <= n; ++i)
-        {
-            if (i == 1)
-                txt.text = i.ToString() + ". Player" + i.ToString() + "     " + (100 / i).ToString() + "\n";
-            else
-                txt.text += i.ToString() + ". Player" + i.ToString() + "     " + (100 / i).ToString() + "\n";
-        }
+
+        GameObject persistentInitDataObj = GameObject.FindGameObjectWithTag("PersistentInitGameData") as GameObject;
+        PersistentInitGameData initGameData = persistentInitDataObj.GetComponent<PersistentInitGameData>();
+
+        txt.text = initGameData.strRanking;
 	}
 	
 	// Update is called once per frame

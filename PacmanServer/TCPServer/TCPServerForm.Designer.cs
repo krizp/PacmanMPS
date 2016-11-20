@@ -61,6 +61,7 @@ namespace TCPServer
             // 
             // tbPort
             // 
+            this.tbPort.Enabled = false;
             this.tbPort.Location = new System.Drawing.Point(41, 38);
             this.tbPort.Name = "tbPort";
             this.tbPort.Size = new System.Drawing.Size(100, 20);
@@ -118,6 +119,7 @@ namespace TCPServer
             // 
             // btnStartGame
             // 
+            this.btnStartGame.Enabled = false;
             this.btnStartGame.Location = new System.Drawing.Point(41, 148);
             this.btnStartGame.Name = "btnStartGame";
             this.btnStartGame.Size = new System.Drawing.Size(206, 73);
@@ -147,7 +149,7 @@ namespace TCPServer
             this.numericUpDown1.Size = new System.Drawing.Size(54, 20);
             this.numericUpDown1.TabIndex = 15;
             this.numericUpDown1.Value = new decimal(new int[] {
-            10,
+            5,
             0,
             0,
             0});
