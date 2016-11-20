@@ -149,9 +149,12 @@ public class GameController : MonoBehaviour
 				return x.points.CompareTo(y.points);
 			});
 
-
+		int count = 1;
         foreach (Player player in sorted)
         {
+			Vector3 newpos = timer.transform.position;
+			newpos.y -= 10 + count * 20;
+			player.scoreLabel.transform.position = newpos;
 			if (player.is_hyde && Input.GetKey (KeyCode.Tab))
 				player.scoreLabel.text = "(HYDE)" + player.name + "-> " + player.points;
 			else if (player.is_hyde)
