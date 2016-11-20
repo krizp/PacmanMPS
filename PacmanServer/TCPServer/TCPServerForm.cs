@@ -76,6 +76,8 @@ namespace TCPServer
 				
 
 				btnStartListening.Text = "Stop Listening";
+
+                btnStartGame.Enabled = true;
             }
             else
             {
@@ -83,6 +85,8 @@ namespace TCPServer
 				_server = null;
 
                 btnStartListening.Text = "Start Listening";
+
+                btnStartGame.Enabled = false;
             }
 
         }
