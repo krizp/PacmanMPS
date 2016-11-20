@@ -25,7 +25,6 @@ public class GameController : MonoBehaviour
 
 	// lista cu toti playerii ce joaca
 	private List<Player> players;
-	private List<Text> info_text;
 
 	// id-ul playerului ce ruleaza pe aceast calculator
 	private int myID;
@@ -71,11 +70,11 @@ public class GameController : MonoBehaviour
 
 		// setez camera pt a vedea tot labirintul
 		Vector3 cameraPos = mainCamera.transform.position;
-		cameraPos.x = (labyrinth[0].Length) * tileSize / 2 -14;
+		cameraPos.x = (labyrinth[0].Length - 1) * tileSize / 2;
 		cameraPos.y = (labyrinth.Length - 1) * tileSize / 2;
 
 		mainCamera.transform.position = cameraPos;
-		mainCamera.orthographicSize = (labyrinth.Length) * tileSize / 2;
+		mainCamera.orthographicSize = (labyrinth[0].Length + 6) * tileSize / 2 / mainCamera.aspect;
 
 
 		// initializez datele statice din clasa Player
@@ -90,19 +89,25 @@ public class GameController : MonoBehaviour
 
 		// creez playerii ca obiecte
 		int count = 1;
-		Text childText; 
-		foreach (var player in players)
+        Text childText;
+
+        Text timer = GameObject.FindWithTag("Timer").GetComponent<Text>();
+
+        foreach (var player in players)
 		{
 			player.createGameObject();
-			player.obj.tag = "Player-" + count.ToString ();
 
-			childText = (Text) Instantiate (GameObject.FindWithTag("Timer").GetComponent<Text>()); 
-			childText.tag = "Info-" + count.ToString ();
+			childText = (Text) Instantiate(timer); 
 			childText.text = player.name + "-" + player.points.ToString();
-			childText.transform.SetParent(canvas.transform, true);
-			childText.transform.position = new Vector2(143, 325 -(count*20));
+            childText.tag = "Info";
+            Vector3 newpos = timer.transform.position;
+            newpos.y -= 10 + count * 20;
+            childText.transform.position = newpos;
+            childText.transform.SetParent(canvas.transform, true);
+            
+            player.scoreLabel = childText;
 
-			count = count + 1;
+            count = count + 1;
 		}
 
 
@@ -131,21 +136,20 @@ public class GameController : MonoBehaviour
 			{
 				return x.points.CompareTo(y.points);
 			});
-
-		int count_pos = 1;
+        
 		foreach (Transform child in canvas.transform) 
 		{
-			if (child.CompareTag ("Timer"))
+			if (child.CompareTag("Timer"))
 				child.GetComponent<Text> ().text ="Next change:"+timer.ToString();
-			
-			if (child.CompareTag ("Info-"+count_pos.ToString())) {
-				if (players [count_pos-1].is_hyde)
-					child.GetComponent<Text> ().text ="(HYDE)"+ players [count_pos-1].name + "-" + players [count_pos-1].points;
-				else
-					child.GetComponent<Text> ().text ="(JEKYLL)"+ players [count_pos-1].name + "-" + players [count_pos-1].points;
-				count_pos = count_pos + 1;
-			}
 		}
+
+        foreach (Player player in sorted)
+        {
+            if (player.is_hyde)
+                player.scoreLabel.text = "(HYDE)" + player.name + "-" + player.points;
+            else
+                player.scoreLabel.text = "(JEKYLL)" + player.name + "-" + player.points;
+        }
 
 
 		/*

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player
 {
@@ -34,6 +35,8 @@ public class Player
 
 	public static int[][] labyrinth;
 	public static float TILE_SIZE;
+
+    public Text scoreLabel = null;
 
 	const int WALL = 1;
 	const int PATH = 0;
