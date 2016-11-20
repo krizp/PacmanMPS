@@ -231,7 +231,7 @@ namespace TCPServer
 
                         if (hydePlayer.score == scoreToWin)
                         {
-                            SendToAllClients("M8|Game Over");
+                            SendToAllClients("M8|" + hydePlayer.id);
                             return GAME_OVER;
                         }
 
