@@ -235,7 +235,7 @@ namespace TCPServer
                         }
 
                         client.player.Respown(hydePlayer.pos);
-						client.Send("M7|" + client.player.id + "|" + client.player.pos.X + "," + client.player.pos.Y);
+						SendToAllClients("M7|" + client.player.id + "|" + client.player.pos.X + "," + client.player.pos.Y);
 						Console.WriteLine("COLIZIUNE!");
                         
 						break;
