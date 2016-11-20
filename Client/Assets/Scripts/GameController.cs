@@ -134,14 +134,7 @@ public class GameController : MonoBehaviour
 
 		sorted.Sort (delegate(Player x, Player y)
 			{
-
-				if (x.points == null && y.points== null) 
-					return 0;
-				else 
-					return x.points.CompareTo(y.points);
-
 				return x.points.CompareTo(y.points);
-
 			});
         
 		foreach (Transform child in canvas.transform) 
