@@ -150,11 +150,12 @@ public class GameController : MonoBehaviour
 			});
 
 		int count = 1;
+		Text timer_copy = GameObject.FindWithTag("Timer").GetComponent<Text>();
         foreach (Player player in sorted)
         {
-			Vector3 newpos = timer.transform.position;
+			Vector3 newpos = timer_copy.transform.position;
 			newpos.y -= 10 + count * 20;
-			player.scoreLabel.transform.position = newpos;
+
 			if (player.is_hyde && Input.GetKey (KeyCode.Tab))
 				player.scoreLabel.text = "(HYDE)" + player.name + "-> " + player.points;
 			else if (player.is_hyde)
