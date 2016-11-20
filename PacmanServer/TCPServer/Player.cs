@@ -33,7 +33,7 @@ namespace TCPServer
 		public static Vector2 UP	= new Vector2(0, 1);
 		public static Vector2 NONE	= new Vector2(0, 0);
 
-		public const float JEKYLL_SPEED = 5.0f;
+		public const float JEKYLL_SPEED = 3.0f;
 		public const float HYDE_SPEED = JEKYLL_SPEED * 2;
 
 

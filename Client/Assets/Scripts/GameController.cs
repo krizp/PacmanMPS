@@ -16,9 +16,6 @@ public class GameController : MonoBehaviour
 	public PersistentSharpConnector conn;
 	public PersistentInitGameData initGameData;
 
-	public Sprite hydeSprite;
-	public Sprite jekyllSprite;
-
 
 	// labirintul primit de la server
 	private int[][] labyrinth;
@@ -40,6 +37,7 @@ public class GameController : MonoBehaviour
 	//HUD
 	public GameObject canvas;
 	public Text exampleText;
+
 	// Use this for initialization
 	void Start()
 	{
@@ -80,8 +78,6 @@ public class GameController : MonoBehaviour
 
 
 		// initializez datele statice din clasa Player
-		Player.HYDE_SPRITE = hydeSprite;
-		Player.JEKYLL_SPRITE = jekyllSprite;
 		Player.TILE_SIZE = tileSize;
 		Player.labyrinth = labyrinth;
 
@@ -133,12 +129,14 @@ public class GameController : MonoBehaviour
 			player.Update(Time.deltaTime);
 		}
 			
+
+
 		foreach (Transform child in canvas.transform) 
 		{
 			if (child.CompareTag("Timer") && Input.GetKey(KeyCode.Tab))
-				child.GetComponent<Text> ().text ="Next change:"+timer.ToString();
-			else if(child.CompareTag("Timer"))
 				child.GetComponent<Text> ().text ="Game Started";
+			else if(child.CompareTag("Timer"))
+				child.GetComponent<Text> ().text ="Next change: "+timer.ToString();
 			
 		}
 
@@ -158,14 +156,14 @@ public class GameController : MonoBehaviour
 			player.scoreLabel.transform.position = newpos;
 
 			if (player.is_hyde && Input.GetKey (KeyCode.Tab))
-				player.scoreLabel.text = "(HYDE)" + player.name + "-> " + player.points;
+				player.scoreLabel.text = "(HYDE) " + player.name;
 			else if (player.is_hyde)
-				player.scoreLabel.text = "(HYDE)" + player.name;
+				player.scoreLabel.text = "(HYDE) " + player.name + " -> " + player.points;
 			
 			if (!player.is_hyde && Input.GetKey (KeyCode.Tab))
-				player.scoreLabel.text = "(JEKYLL)" + player.name + "-> " + player.points;
+				player.scoreLabel.text = "(JEKYLL) " + player.name;
 			else if (!player.is_hyde)
-				player.scoreLabel.text = "(JEKYLL)" + player.name;
+				player.scoreLabel.text = "(JEKYLL) " + player.name + " -> " + player.points;
 
 			count += 1;
         }
@@ -216,6 +214,7 @@ public class GameController : MonoBehaviour
 				players[playerIndex].crt_dir = new Vector2(float.Parse(crt_dir[0]), float.Parse(crt_dir[1]));
 				players[playerIndex].next_dir = new Vector2(float.Parse(next_dir[0]), float.Parse(next_dir[1]));
 				players[playerIndex].turn_point = new Vector2(float.Parse(turn_point[0]), float.Parse(turn_point[1]));
+				players[playerIndex].ChangeAnimation();
 			}
 			else if (command.Substring(0, 2) == "M5")			// timer stop
 			{
