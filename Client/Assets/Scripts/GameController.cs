@@ -43,6 +43,8 @@ public class GameController : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
+		Screen.SetResolution(1920, 1080, true);
+
 		// iau datele intitiale ale jocului
 		GameObject persistentInitDataObj = GameObject.FindGameObjectWithTag("PersistentInitGameData") as GameObject;
 		initGameData = persistentInitDataObj.GetComponent<PersistentInitGameData>();
@@ -130,25 +132,35 @@ public class GameController : MonoBehaviour
 		{
 			player.Update(Time.deltaTime);
 		}
+			
+		foreach (Transform child in canvas.transform) 
+		{
+			if (child.CompareTag("Timer") && Input.GetKey(KeyCode.Tab))
+				child.GetComponent<Text> ().text ="Next change:"+timer.ToString();
+			else if(child.CompareTag("Timer"))
+				child.GetComponent<Text> ().text ="Game Started";
+			
+		}
+
 		List<Player> sorted = new List<Player> (players);
 
 		sorted.Sort (delegate(Player x, Player y)
 			{
 				return x.points.CompareTo(y.points);
 			});
-        
-		foreach (Transform child in canvas.transform) 
-		{
-			if (child.CompareTag("Timer") && Input.GetKeyDown(KeyCode.Tab))
-				child.GetComponent<Text> ().text ="Next change:"+timer.ToString();
-		}
+
 
         foreach (Player player in sorted)
         {
-            if (player.is_hyde)
-                player.scoreLabel.text = "(HYDE)" + player.name + "-" + player.points;
-            else
-                player.scoreLabel.text = "(JEKYLL)" + player.name + "-" + player.points;
+			if (player.is_hyde && Input.GetKey (KeyCode.Tab))
+				player.scoreLabel.text = "(HYDE)" + player.name + "-> " + player.points;
+			else if (player.is_hyde)
+				player.scoreLabel.text = "(HYDE)" + player.name;
+			
+			if (!player.is_hyde && Input.GetKey (KeyCode.Tab))
+				player.scoreLabel.text = "(JEKYLL)" + player.name + "-> " + player.points;
+			else if (!player.is_hyde)
+				player.scoreLabel.text = "(JEKYLL)" + player.name;
         }
 
 
