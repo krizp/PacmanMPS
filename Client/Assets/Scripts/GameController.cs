@@ -129,12 +129,14 @@ public class GameController : MonoBehaviour
 
 		sorted.Sort (delegate(Player x, Player y)
 			{
-<<<<<<< HEAD
-				if (x.points == null && y.points== null) return 0;
-				else return x.points.CompareTo(y.points);
-=======
+
+				if (x.points == null && y.points== null) 
+					return 0;
+				else 
+					return x.points.CompareTo(y.points);
+
 				return x.points.CompareTo(y.points);
->>>>>>> 3d7a4fd52f5fc8a53370d02d0a85865b2a6a92bf
+
 			});
 
 		int count_pos = 1;
