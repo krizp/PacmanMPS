@@ -13,6 +13,9 @@ public class PersistentInitGameData : MonoBehaviour
 	
 	public List<Player> players;
 
+    public string strRanking = "";
+    bool isWinner = false;
+
 	void Awake()
 	{
 		// make this object persistent
