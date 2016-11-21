@@ -100,7 +100,6 @@ public class GameController : MonoBehaviour
 			player.createGameObject();
 
 			childText = (Text) Instantiate(timer); 
-			childText.text = player.name + "-" + player.points.ToString();
             childText.tag = "Info";
             Vector3 newpos = timer.transform.position;
             newpos.y -= 10 + count * 20;
@@ -133,14 +132,10 @@ public class GameController : MonoBehaviour
 			player.Update(Time.deltaTime);
 		}
 			
-		foreach (Transform child in canvas.transform) 
-		{
-			if (child.CompareTag("Timer") && Input.GetKey(KeyCode.Tab))
-				child.GetComponent<Text> ().text ="Next change:"+timer.ToString();
-			else if(child.CompareTag("Timer"))
-				child.GetComponent<Text> ().text ="Game Started";
-			
-		}
+		Text timer_copy = GameObject.FindWithTag("Timer").GetComponent<Text>();
+		timer_copy.text ="Next change:"+timer.ToString();
+
+		
 
 		List<Player> sorted = players.OrderBy (o => o.points).ToList ();
 	/*
@@ -150,7 +145,7 @@ public class GameController : MonoBehaviour
 			});
 	*/
 		int count = 1;
-		Text timer_copy = GameObject.FindWithTag("Timer").GetComponent<Text>();
+
         foreach (Player player in sorted)
         {
 			Vector3 newpos = timer_copy.transform.position;
@@ -159,13 +154,15 @@ public class GameController : MonoBehaviour
 
 			if (player.is_hyde && Input.GetKey (KeyCode.Tab))
 				player.scoreLabel.text = "(HYDE)" + player.name + "-> " + player.points;
-			else if (player.is_hyde)
-				player.scoreLabel.text = "(HYDE)" + player.name;
+			else if (player.is_hyde && !Input.GetKey (KeyCode.Tab))
+				player.scoreLabel.text = "";
+			
 			
 			if (!player.is_hyde && Input.GetKey (KeyCode.Tab))
 				player.scoreLabel.text = "(JEKYLL)" + player.name + "-> " + player.points;
-			else if (!player.is_hyde)
-				player.scoreLabel.text = "(JEKYLL)" + player.name;
+			else if (!player.is_hyde && !Input.GetKey (KeyCode.Tab))
+				player.scoreLabel.text = "";
+			
 
 			count += 1;
         }
