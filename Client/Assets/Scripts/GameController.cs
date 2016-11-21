@@ -134,19 +134,6 @@ public class GameController : MonoBehaviour
 		Text timer_copy = GameObject.FindWithTag("Timer").GetComponent<Text>();
 		timer_copy.text ="Next change:"+timer.ToString();
 
-
-
-
-		foreach (Transform child in canvas.transform) 
-		{
-			if (child.CompareTag("Timer") && Input.GetKey(KeyCode.Tab))
-				child.GetComponent<Text> ().text ="Game Started";
-			else if(child.CompareTag("Timer"))
-				child.GetComponent<Text> ().text ="Next change: "+timer.ToString();
-			
-		}
-
-
 		List<Player> sorted = players.OrderBy (o => o.points).ToList ();
 	/*
 		sorted.Sort (delegate(Player x, Player y)
