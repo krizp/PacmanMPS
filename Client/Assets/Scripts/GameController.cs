@@ -129,16 +129,12 @@ public class GameController : MonoBehaviour
 		{
 			player.Update(Time.deltaTime);
 		}
-			
-<<<<<<< HEAD
-<<<<<<< HEAD
+
+
 		Text timer_copy = GameObject.FindWithTag("Timer").GetComponent<Text>();
 		timer_copy.text ="Next change:"+timer.ToString();
 
-		
-=======
-=======
->>>>>>> refs/remotes/origin/master
+
 
 
 		foreach (Transform child in canvas.transform) 
@@ -149,7 +145,7 @@ public class GameController : MonoBehaviour
 				child.GetComponent<Text> ().text ="Next change: "+timer.ToString();
 			
 		}
->>>>>>> origin/master
+
 
 		List<Player> sorted = players.OrderBy (o => o.points).ToList ();
 	/*
@@ -167,8 +163,6 @@ public class GameController : MonoBehaviour
 			player.scoreLabel.transform.position = newpos;
 
 			if (player.is_hyde && Input.GetKey (KeyCode.Tab))
-<<<<<<< HEAD
-<<<<<<< HEAD
 				player.scoreLabel.text = "(HYDE)" + player.name + "-> " + player.points;
 			else if (player.is_hyde && !Input.GetKey (KeyCode.Tab))
 				player.scoreLabel.text = "";
@@ -178,27 +172,6 @@ public class GameController : MonoBehaviour
 				player.scoreLabel.text = "(JEKYLL)" + player.name + "-> " + player.points;
 			else if (!player.is_hyde && !Input.GetKey (KeyCode.Tab))
 				player.scoreLabel.text = "";
-			
-=======
-				player.scoreLabel.text = "(HYDE) " + player.name;
-			else if (player.is_hyde)
-				player.scoreLabel.text = "(HYDE) " + player.name + " -> " + player.points;
-			
-			if (!player.is_hyde && Input.GetKey (KeyCode.Tab))
-				player.scoreLabel.text = "(JEKYLL) " + player.name;
-			else if (!player.is_hyde)
-				player.scoreLabel.text = "(JEKYLL) " + player.name + " -> " + player.points;
->>>>>>> origin/master
-=======
-				player.scoreLabel.text = "(HYDE) " + player.name;
-			else if (player.is_hyde)
-				player.scoreLabel.text = "(HYDE) " + player.name + " -> " + player.points;
-			
-			if (!player.is_hyde && Input.GetKey (KeyCode.Tab))
-				player.scoreLabel.text = "(JEKYLL) " + player.name;
-			else if (!player.is_hyde)
-				player.scoreLabel.text = "(JEKYLL) " + player.name + " -> " + player.points;
->>>>>>> refs/remotes/origin/master
 
 			count += 1;
         }
