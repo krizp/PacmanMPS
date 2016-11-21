@@ -131,11 +131,14 @@ public class GameController : MonoBehaviour
 		}
 			
 <<<<<<< HEAD
+<<<<<<< HEAD
 		Text timer_copy = GameObject.FindWithTag("Timer").GetComponent<Text>();
 		timer_copy.text ="Next change:"+timer.ToString();
 
 		
 =======
+=======
+>>>>>>> refs/remotes/origin/master
 
 
 		foreach (Transform child in canvas.transform) 
@@ -165,6 +168,7 @@ public class GameController : MonoBehaviour
 
 			if (player.is_hyde && Input.GetKey (KeyCode.Tab))
 <<<<<<< HEAD
+<<<<<<< HEAD
 				player.scoreLabel.text = "(HYDE)" + player.name + "-> " + player.points;
 			else if (player.is_hyde && !Input.GetKey (KeyCode.Tab))
 				player.scoreLabel.text = "";
@@ -185,6 +189,16 @@ public class GameController : MonoBehaviour
 			else if (!player.is_hyde)
 				player.scoreLabel.text = "(JEKYLL) " + player.name + " -> " + player.points;
 >>>>>>> origin/master
+=======
+				player.scoreLabel.text = "(HYDE) " + player.name;
+			else if (player.is_hyde)
+				player.scoreLabel.text = "(HYDE) " + player.name + " -> " + player.points;
+			
+			if (!player.is_hyde && Input.GetKey (KeyCode.Tab))
+				player.scoreLabel.text = "(JEKYLL) " + player.name;
+			else if (!player.is_hyde)
+				player.scoreLabel.text = "(JEKYLL) " + player.name + " -> " + player.points;
+>>>>>>> refs/remotes/origin/master
 
 			count += 1;
         }
