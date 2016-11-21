@@ -34,6 +34,9 @@ public class Player
 	public const float JEKYLL_SPEED_ANIM = 0.05f;
 	public const float HYDE_SPEED_ANIM = 0.01f;
 
+	public static string HYDE_SPRITE_SHEET;
+	public string spriteSheet;
+
 	public static int[][] labyrinth;
 	public static float TILE_SIZE;
 
@@ -59,13 +62,13 @@ public class Player
 		if (!is_hyde)
 		{
 			speed = JEKYLL_SPEED;
-			moveAnimation.LoadAnimations("jekyll0");
+			moveAnimation.LoadAnimations(spriteSheet);
 			moveAnimation.SetSpeed(JEKYLL_SPEED_ANIM);
 		}
 		else
 		{
 			speed = HYDE_SPEED;
-			moveAnimation.LoadAnimations("hyde0");
+			moveAnimation.LoadAnimations(HYDE_SPRITE_SHEET);
 			moveAnimation.SetSpeed(HYDE_SPEED_ANIM);
 		}
 
@@ -84,7 +87,7 @@ public class Player
 			// schimba in jekyll
 			is_hyde = false;
 			speed = JEKYLL_SPEED;
-			moveAnimation.LoadAnimations("jekyll0");
+			moveAnimation.LoadAnimations(spriteSheet);
 			moveAnimation.SetSpeed(JEKYLL_SPEED_ANIM);
 		}
 		else
@@ -92,7 +95,7 @@ public class Player
 			// schimba in hyde
 			is_hyde = true;
 			speed = HYDE_SPEED;
-			moveAnimation.LoadAnimations("hyde0");
+			moveAnimation.LoadAnimations(HYDE_SPRITE_SHEET);
 			moveAnimation.SetSpeed(HYDE_SPEED_ANIM);
 		}
 

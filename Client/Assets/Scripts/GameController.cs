@@ -80,6 +80,7 @@ public class GameController : MonoBehaviour
 		// initializez datele statice din clasa Player
 		Player.TILE_SIZE = tileSize;
 		Player.labyrinth = labyrinth;
+		Player.HYDE_SPRITE_SHEET = "hyde" + Random.Range(0, 5);  // in resources sunt 5 spritesheeturi de hyde
 
 
 		// desenez labirintul
@@ -93,6 +94,7 @@ public class GameController : MonoBehaviour
 
         foreach (var player in players)
 		{
+			player.spriteSheet = "jekyll" + (player.id % 7);	// in resources sunt 7 spritesheeturi de jekyll
 			player.createGameObject();
 
 			childText = (Text) Instantiate(timer); 
