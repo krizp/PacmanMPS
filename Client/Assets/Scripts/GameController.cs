@@ -247,6 +247,28 @@ public class GameController : MonoBehaviour
 			}
             else if (command.Substring(0, 2) == "M8")           // game over
             {
+                string data = command.Substring(3);
+                string[] datas = data.Split('|');
+
+                int winnerID = int.Parse(datas[0]);
+                int eatenID = int.Parse(datas[1]);
+
+                players[GetPlayerIndex(winnerID)].points++;
+                players[GetPlayerIndex(eatenID)].points--;
+
+                initGameData.strRanking = "";
+
+                List<Player> sorted = players.OrderBy(o => -o.points).ToList();
+
+                int ranking = 1;
+
+                initGameData.isWinner = (sorted[0].id == myID);
+
+                foreach (Player p in sorted)
+                {
+                    initGameData.strRanking += ranking.ToString() + ". " + p.name + " " + p.points + "\n";
+                    ranking++;
+                }
                 UnityEngine.SceneManagement.SceneManager.LoadScene("GameOverScene");
             }
 		}
