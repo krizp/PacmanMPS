@@ -20,6 +20,7 @@ public class Player
 
 	public GameObject		obj;
 	public SpriteRenderer	renderer;
+	public MoveAnimation	moveAnimation;
 
 	public static Vector2 RIGHT = new Vector2(1, 0);
 	public static Vector2 LEFT	= new Vector2(-1, 0);
@@ -27,11 +28,14 @@ public class Player
 	public static Vector2 UP	= new Vector2(0, 1);
 	public static Vector2 NONE	= new Vector2(0, 0);
 
-	public const float JEKYLL_SPEED = 5.0f;
+	public const float JEKYLL_SPEED = 3.0f;
 	public const float HYDE_SPEED = JEKYLL_SPEED * 2;
 
-	public static Sprite JEKYLL_SPRITE = null;
-	public static Sprite HYDE_SPRITE = null;
+	public const float JEKYLL_SPEED_ANIM = 0.05f;
+	public const float HYDE_SPEED_ANIM = 0.01f;
+
+	public static string HYDE_SPRITE_SHEET;
+	public string spriteSheet;
 
 	public static int[][] labyrinth;
 	public static float TILE_SIZE;
@@ -54,16 +58,23 @@ public class Player
 	{
 		obj = new GameObject("Player" + name + id);
 		renderer = obj.AddComponent<SpriteRenderer>();
+		moveAnimation = obj.AddComponent<MoveAnimation>();
 		if (!is_hyde)
 		{
-			renderer.sprite = JEKYLL_SPRITE;
 			speed = JEKYLL_SPEED;
+			moveAnimation.LoadAnimations(spriteSheet);
+			moveAnimation.SetSpeed(JEKYLL_SPEED_ANIM);
 		}
 		else
 		{
-			renderer.sprite = HYDE_SPRITE;
 			speed = HYDE_SPEED;
+			moveAnimation.LoadAnimations(HYDE_SPRITE_SHEET);
+			moveAnimation.SetSpeed(HYDE_SPEED_ANIM);
 		}
+
+
+		moveAnimation.ChangeAnimation(MoveAnimation.AnimationType.IDLE_FRONT);
+		obj.transform.localScale = new Vector3(3.9f, 3.9f, 1);
 
 		//Debug.Log("=============> " + jekyllSprite.textureRect.width / jekyllSprite.pixelsPerUnit);
 		renderer.sortingLayerName = "Player";
@@ -75,16 +86,20 @@ public class Player
 		{
 			// schimba in jekyll
 			is_hyde = false;
-			renderer.sprite = JEKYLL_SPRITE;
 			speed = JEKYLL_SPEED;
+			moveAnimation.LoadAnimations(spriteSheet);
+			moveAnimation.SetSpeed(JEKYLL_SPEED_ANIM);
 		}
 		else
 		{
 			// schimba in hyde
 			is_hyde = true;
-			renderer.sprite = HYDE_SPRITE;
 			speed = HYDE_SPEED;
+			moveAnimation.LoadAnimations(HYDE_SPRITE_SHEET);
+			moveAnimation.SetSpeed(HYDE_SPEED_ANIM);
 		}
+
+		ChangeAnimation();
 	}
 
 	public void Update(float dt)
@@ -93,6 +108,8 @@ public class Player
 		{
 			crt_dir = next_dir;
 			update_turning_point();
+
+			ChangeAnimation();
 		}
 
 		if (crt_dir == UP		&& pos.y >= turn_point.y ||
@@ -103,11 +120,27 @@ public class Player
 			pos = turn_point;
 			crt_dir = next_dir;
 			update_turning_point();
+
+			ChangeAnimation();
 		}
 
 		pos += dt * speed * crt_dir;
 
 		obj.transform.position = pos * TILE_SIZE;
+	}
+
+	public void ChangeAnimation()
+	{
+		if (crt_dir == UP)
+			moveAnimation.ChangeAnimation(MoveAnimation.AnimationType.WALK_BACK);
+		else if (crt_dir == LEFT)
+			moveAnimation.ChangeAnimation(MoveAnimation.AnimationType.WALK_LEFT);
+		else if (crt_dir == DOWN)
+			moveAnimation.ChangeAnimation(MoveAnimation.AnimationType.WALK_FRONT);
+		else if (crt_dir == RIGHT)
+			moveAnimation.ChangeAnimation(MoveAnimation.AnimationType.WALK_RIGHT);
+		else
+			moveAnimation.ChangeAnimation(MoveAnimation.AnimationType.TURN_FRONT);
 	}
 
 	private void update_turning_point()

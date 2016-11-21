@@ -16,9 +16,6 @@ public class GameController : MonoBehaviour
 	public PersistentSharpConnector conn;
 	public PersistentInitGameData initGameData;
 
-	public Sprite hydeSprite;
-	public Sprite jekyllSprite;
-
 
 	// labirintul primit de la server
 	private int[][] labyrinth;
@@ -40,6 +37,7 @@ public class GameController : MonoBehaviour
 	//HUD
 	public GameObject canvas;
 	public Text exampleText;
+
 	// Use this for initialization
 	void Start()
 	{
@@ -80,10 +78,9 @@ public class GameController : MonoBehaviour
 
 
 		// initializez datele statice din clasa Player
-		Player.HYDE_SPRITE = hydeSprite;
-		Player.JEKYLL_SPRITE = jekyllSprite;
 		Player.TILE_SIZE = tileSize;
 		Player.labyrinth = labyrinth;
+		Player.HYDE_SPRITE_SHEET = "hyde" + Random.Range(0, 5);  // in resources sunt 5 spritesheeturi de hyde
 
 
 		// desenez labirintul
@@ -97,6 +94,7 @@ public class GameController : MonoBehaviour
 
         foreach (var player in players)
 		{
+			player.spriteSheet = "jekyll" + (player.id % 7);	// in resources sunt 7 spritesheeturi de jekyll
 			player.createGameObject();
 
 			childText = (Text) Instantiate(timer); 
@@ -132,10 +130,23 @@ public class GameController : MonoBehaviour
 			player.Update(Time.deltaTime);
 		}
 			
+<<<<<<< HEAD
 		Text timer_copy = GameObject.FindWithTag("Timer").GetComponent<Text>();
 		timer_copy.text ="Next change:"+timer.ToString();
 
 		
+=======
+
+
+		foreach (Transform child in canvas.transform) 
+		{
+			if (child.CompareTag("Timer") && Input.GetKey(KeyCode.Tab))
+				child.GetComponent<Text> ().text ="Game Started";
+			else if(child.CompareTag("Timer"))
+				child.GetComponent<Text> ().text ="Next change: "+timer.ToString();
+			
+		}
+>>>>>>> origin/master
 
 		List<Player> sorted = players.OrderBy (o => o.points).ToList ();
 	/*
@@ -153,6 +164,7 @@ public class GameController : MonoBehaviour
 			player.scoreLabel.transform.position = newpos;
 
 			if (player.is_hyde && Input.GetKey (KeyCode.Tab))
+<<<<<<< HEAD
 				player.scoreLabel.text = "(HYDE)" + player.name + "-> " + player.points;
 			else if (player.is_hyde && !Input.GetKey (KeyCode.Tab))
 				player.scoreLabel.text = "";
@@ -163,6 +175,16 @@ public class GameController : MonoBehaviour
 			else if (!player.is_hyde && !Input.GetKey (KeyCode.Tab))
 				player.scoreLabel.text = "";
 			
+=======
+				player.scoreLabel.text = "(HYDE) " + player.name;
+			else if (player.is_hyde)
+				player.scoreLabel.text = "(HYDE) " + player.name + " -> " + player.points;
+			
+			if (!player.is_hyde && Input.GetKey (KeyCode.Tab))
+				player.scoreLabel.text = "(JEKYLL) " + player.name;
+			else if (!player.is_hyde)
+				player.scoreLabel.text = "(JEKYLL) " + player.name + " -> " + player.points;
+>>>>>>> origin/master
 
 			count += 1;
         }
@@ -213,6 +235,7 @@ public class GameController : MonoBehaviour
 				players[playerIndex].crt_dir = new Vector2(float.Parse(crt_dir[0]), float.Parse(crt_dir[1]));
 				players[playerIndex].next_dir = new Vector2(float.Parse(next_dir[0]), float.Parse(next_dir[1]));
 				players[playerIndex].turn_point = new Vector2(float.Parse(turn_point[0]), float.Parse(turn_point[1]));
+				players[playerIndex].ChangeAnimation();
 			}
 			else if (command.Substring(0, 2) == "M5")			// timer stop
 			{
@@ -244,6 +267,28 @@ public class GameController : MonoBehaviour
 			}
             else if (command.Substring(0, 2) == "M8")           // game over
             {
+                string data = command.Substring(3);
+                string[] datas = data.Split('|');
+
+                int winnerID = int.Parse(datas[0]);
+                int eatenID = int.Parse(datas[1]);
+
+                players[GetPlayerIndex(winnerID)].points++;
+                players[GetPlayerIndex(eatenID)].points--;
+
+                initGameData.strRanking = "";
+
+                List<Player> sorted = players.OrderBy(o => -o.points).ToList();
+
+                int ranking = 1;
+
+                initGameData.isWinner = (sorted[0].id == myID);
+
+                foreach (Player p in sorted)
+                {
+                    initGameData.strRanking += ranking.ToString() + ". " + p.name + " " + p.points + "\n";
+                    ranking++;
+                }
                 UnityEngine.SceneManagement.SceneManager.LoadScene("GameOverScene");
             }
 		}

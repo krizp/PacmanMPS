@@ -42,7 +42,7 @@ namespace TCPServer
         private int scoreToWin = 10;
 
 		// Called when the game starts
-		public void StartGame(int scoreToWin)
+		public void StartGame(int scoreToWin, int mazeDim)
 		{
 			Console.WriteLine("Game Started!");
 
@@ -51,7 +51,7 @@ namespace TCPServer
 			// Deny any atempt to connect at the server
 			_acceptClients = false;
 
-			mg = new MazeGenerator();
+			mg = new MazeGenerator(mazeDim);
 			int[,] maze = mg.computeFinalMap();
 			Player.labyrinth = maze;
 			Player.labyrinthDim = mg.getDimension();
@@ -231,13 +231,13 @@ namespace TCPServer
 
                         if (hydePlayer.score == scoreToWin)
                         {
-                            SendToAllClients("M8|" + hydePlayer.id);
+                            SendToAllClients("M8|" + hydePlayer.id + "|" + client.player.id);
                             return GAME_OVER;
                         }
 
                         client.player.Respown(hydePlayer.pos);
 						SendToAllClients("M7|" + client.player.id + "|" + client.player.pos.X + "," + client.player.pos.Y);
-						Console.WriteLine("COLIZIUNE!");
+						//Console.WriteLine("COLIZIUNE!");
                         
 						break;
 					}
@@ -259,21 +259,24 @@ namespace TCPServer
 
         void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
-            lock (hydeMutex)
-            {
-                Player victim;
-                float distance;
-                findNearestVictim(out victim, out distance);
+			if (_connectedClients.Count > 1)
+			{
+				lock (hydeMutex)
+				{
+					Player victim;
+					float distance;
+					findNearestVictim(out victim, out distance);
 
-                if (victim != null)
-                {
-                    hydePlayer.speed = Player.JEKYLL_SPEED;
-                    hydePlayer = victim;
-                    hydePlayer.speed = Player.HYDE_SPEED;
+					if (victim != null)
+					{
+						hydePlayer.speed = Player.JEKYLL_SPEED;
+						hydePlayer = victim;
+						hydePlayer.speed = Player.HYDE_SPEED;
 
-                    SendToAllClients("M5|" + hydePlayer.id);
-                }
-            }
+						SendToAllClients("M5|" + hydePlayer.id);
+					}
+				}
+			}
         }
 
         void findNearestVictim(out Player victim, out float distance)

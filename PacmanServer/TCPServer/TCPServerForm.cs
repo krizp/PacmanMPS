@@ -111,24 +111,10 @@ namespace TCPServer
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool AllocConsole();
 
-        private void btnSendToAllClients_Click(object sender, EventArgs e)
-        {
-			//Server.Instance.SendToAllClients();
-			_server.SendToAllClients("rrrrr");
-		}
-
-		private void btnPrintClients_Click(object sender, EventArgs e)
-		{
-			if (_server != null)
-			{
-				List<string> res = _server.GetClientsInfo();
-				res.ForEach(s => Console.WriteLine(s));
-			}
-		}
 
 		private void btnStartGame_Click(object sender, EventArgs e)
 		{
-			_server.StartGame(Decimal.ToInt32(numericUpDown1.Value));
+			_server.StartGame(Decimal.ToInt32(numericUpDown1.Value), Decimal.ToInt32(numUpDownMazeDim.Value));
 		}
 	}
 }

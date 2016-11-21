@@ -1,0 +1,155 @@
+Initialize engine version: 5.4.2f2 (b7e030c65c9b)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.0]
+    Renderer: Intel(R) HD Graphics Family (ID=0xa16)
+    Vendor:   Intel
+    VRAM:     1110 MB
+Begin MonoManager ReloadAssembly
+Platform assembly: E:\Abi\_Programming\Unity\Pacman MPS\PacmanMPS\Client\Builds\v15\client v15_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading E:\Abi\_Programming\Unity\Pacman MPS\PacmanMPS\Client\Builds\v15\client v15_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: E:\Abi\_Programming\Unity\Pacman MPS\PacmanMPS\Client\Builds\v15\client v15_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading E:\Abi\_Programming\Unity\Pacman MPS\PacmanMPS\Client\Builds\v15\client v15_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: E:\Abi\_Programming\Unity\Pacman MPS\PacmanMPS\Client\Builds\v15\client v15_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading E:\Abi\_Programming\Unity\Pacman MPS\PacmanMPS\Client\Builds\v15\client v15_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: E:\Abi\_Programming\Unity\Pacman MPS\PacmanMPS\Client\Builds\v15\client v15_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading E:\Abi\_Programming\Unity\Pacman MPS\PacmanMPS\Client\Builds\v15\client v15_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+- Completed reload, in  0.115 seconds
+Platform assembly: E:\Abi\_Programming\Unity\Pacman MPS\PacmanMPS\Client\Builds\v15\client v15_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: E:\Abi\_Programming\Unity\Pacman MPS\PacmanMPS\Client\Builds\v15\client v15_Data\Managed\System.dll (this message is harmless)
+<RI> Initializing input.
+<RI> Input initialized.
+desktop: 1366x768 60Hz; virtual: 1366x768 at 0,0
+<RI> Initialized touch support.
+UnloadTime: 1.662117 ms
+M1|0
+Connect to server succeeded!
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+Pasul 1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+M2|17|33|111111111111111111111111111111111100000000000001000100000000000001101011111011101000101110111110101100010001000101000101000100010001101110101010101000101010101011101101000100010001000100010001000101101011111110111000111011111110101101000000010100000001010000000101101111101010101101101010101111101101000101010100000001010101000101101010101010111000111010101010101101010001010000000000010100010101101011111011111000111110111110101101000001000000000000000100000101101111101111111101111111101111101100000000000000000000000000000001111111111111111111111111111111111
+17|33|111111111111111111111111111111111100000000000001000100000000000001101011111011101000101110111110101100010001000101000101000100010001101110101010101000101010101011101101000100010001000100010001000101101011111110111000111011111110101101000000010100000001010000000101101111101010101101101010101111101101000101010100000001010101000101101010101010111000111010101010101101010001010000000000010100010101101011111011111000111110111110101101000001000000000000000100000101101111101111111101111111101111101100000000000000000000000000000001111111111111111111111111111111111
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+Pasul 2
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+M3|0,Ab,27,1|1,Sab,14,11|0
+Pasul 3
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+Start
+Unloading 4 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 2.759730 ms
+
+Unloading 13 unused Assets to reduce memory usage. Loaded Objects now: 180.
+Total: 0.344136 ms (FindLiveObjects: 0.027168 ms CreateObjectMapping: 0.020527 ms MarkObjects: 0.275912 ms  DeleteObjects: 0.016301 ms)
+
+178
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+178
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+M4|0|27,1|0,0|-1,0|0,0
+M4|0|19.12143,1|-1,0|0,1|19,1
+M4|0|19,4.95916|0,1|1,0|19,5
+M4|0|21,5|0,0|0,1|21,5
+M4|0|21,10.36782|0,1|-1,0|21,11
+M7|1|19,3
+M4|0|14.9562,11|-1,0|0,0|11,11
+M4|1|19,3|0,0|0,0|0,0
+M4|0|11,11|0,0|1,0|11,11
+M4|0|20.24971,11|1,0|0,-1|21,11
+M4|0|21,5.443157|0,-1|-1,0|21,5
+M5|1
+178
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+178
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+M4|0|19.70679,5|-1,0|0,-1|19,5
+M7|0|5,7
+M4|0|5,7|0,0|0,0|19,1
+M4|1|19,3|0,0|0,0|0,0
+M4|0|5,7|0,0|0,1|19,1
+M4|0|5,7|0,0|1,0|5,7
+M4|0|9,7|0,0|0,1|9,7
+M4|0|9,12.41843|0,1|1,0|9,13
+M4|0|15.52231,13|1,0|0,-1|16,13
+M4|0|16,11.34471|0,-1|1,0|16,11
+M4|0|20.72282,11|1,0|0,-1|21,11
+M4|0|21,3.666097|0,1|0,0|21,11
+M4|0|21,4.633213|0,1|-1,0|21,5
+M5|0
+178
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+178
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+M4|0|19,5|0,0|0,-1|19,5
+M7|1|11,3
+M4|0|19,3.911489|0,-1|0,0|19,1
+M4|1|11,3|0,0|0,0|0,0
+M4|0|19,1|0,0|0,1|19,1
+M4|0|19,4.879552|0,1|1,0|19,5
+M4|0|20.8989,5|1,0|0,1|21,5
+M4|0|21,10.02|0,1|-1,0|21,11
+M4|0|12.05421,11|-1,0|0,-1|11,11
+M7|1|31,13
+M4|1|31,13|0,0|0,0|0,0
+M4|0|11,3.961884|0,-1|0,0|11,3
+M4|0|11,3|0,0|0,1|11,3
+M4|0|11,11|0,0|1,0|11,11
+M4|0|15.74153,11|1,0|0,1|16,11
+M4|0|16,14.69194|0,1|1,0|16,15
+M4|0|28.41177,15|1,0|0,-1|31,15
+M7|1|15,2
+M4|0|31,13.9113|0,-1|0,0|31,1
+M4|1|15,2|0,0|0,0|0,0
+M4|0|31,6.89176|0,1|0,0|31,15
+M4|0|31,15|0,0|-1,0|31,15
+M4|0|16.50198,15|-1,0|0,-1|16,15
+M5|1
+178
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+178
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+M5|0
+178
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+178
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+M4|0|16,1|0,0|-1,0|16,1
+M4|0|15.41337,1|-1,0|0,1|15,1
+M7|1|27,7
+M4|1|27,7|0,0|0,0|0,0
+M4|0|15,1.097963|0,1|0,0|15,7
+M4|0|15,4.272054|0,1|1,0|15,5
+M4|0|17,5|0,0|0,1|17,5
+Connection broken.
+Setting up 1 worker threads for Enlighten.
+  Thread -> id: 40d8 -> priority: 1 

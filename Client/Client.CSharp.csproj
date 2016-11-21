@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\ChangeLevel.cs" />
     <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\GenerateRanking.cs" />
+    <Compile Include="Assets\Scripts\MoveAnimation.cs" />
     <Compile Include="Assets\Scripts\PersistentInitGameData.cs" />
     <Compile Include="Assets\Scripts\PersistentSharpConnector.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
